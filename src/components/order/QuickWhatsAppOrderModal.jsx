@@ -183,7 +183,7 @@ export const QuickWhatsAppOrderModal = () => {
                 <span>Enter Delivery Address for Instant Dispatch</span>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="modal-form-row-2">
                 <div className="form-group">
                   <label className="form-label">Full Name *</label>
                   <input
@@ -228,7 +228,7 @@ export const QuickWhatsAppOrderModal = () => {
                 {formErrors.address && <span style={{ color: '#EF4444', fontSize: '0.75rem', marginTop: '0.2rem', display: 'block' }}>{formErrors.address}</span>}
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="modal-form-row-2">
                 <div className="form-group">
                   <label className="form-label">City *</label>
                   <input

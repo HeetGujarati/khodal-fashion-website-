@@ -11,16 +11,16 @@ export const HeroBanner = ({ onExploreClick }) => {
 
   return (
     <section 
+      className="hero-section"
       style={{ 
         position: 'relative', 
         overflow: 'hidden', 
-        padding: '4.5rem 0 5rem 0', 
         borderBottom: '1px solid var(--border-subtle)', 
         background: 'linear-gradient(180deg, #FFFFFF 0%, #F9F8F5 100%)' 
       }}
     >
       <div className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', alignItems: 'center', gap: '3.5rem' }}>
+        <div className="hero-grid" style={{ alignItems: 'center' }}>
           
           {/* Left Column: Editorial Typography & Boutique Value Proposition */}
           <motion.div
@@ -211,7 +211,7 @@ export const HeroBanner = ({ onExploreClick }) => {
                 </div>
 
                 {/* Direct Action Buttons */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <div className="hero-card-actions">
                   <motion.button
                     whileTap={{ scale: 0.98 }}
                     className="btn btn-dark btn-sm"

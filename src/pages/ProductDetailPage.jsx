@@ -77,7 +77,7 @@ export const ProductDetailPage = ({ product, onBack, _setCurrentView, onSelectPr
         </div>
 
         {/* 2-Column Product Showcase */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '3.5rem', marginBottom: '5rem' }}>
+        <div className="pdp-grid">
           
           {/* LEFT: Multi-Angle Interactive Gallery & Dial Zoom */}
           <div>
@@ -252,7 +252,7 @@ export const ProductDetailPage = ({ product, onBack, _setCurrentView, onSelectPr
 
             {/* DUAL HIGH CONVERSION ACTION BUTTONS */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem', marginBottom: '2.5rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="pdp-action-buttons">
                 <motion.button
                   whileTap={{ scale: 0.98 }}
                   className="btn btn-dark btn-lg"

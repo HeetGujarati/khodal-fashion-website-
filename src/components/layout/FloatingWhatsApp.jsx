@@ -9,7 +9,7 @@ export const FloatingWhatsApp = () => {
   const cleanPhone = storeConfig.whatsappNumber.replace(/[^0-9]/g, '');
 
   return (
-    <div style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 990 }}>
+    <div className="d-none d-md-block" style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 990 }}>
       {/* Mini popup card if tooltip is active */}
       {showTooltip && (
         <div 

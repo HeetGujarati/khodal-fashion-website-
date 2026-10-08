@@ -788,20 +788,241 @@ h1, h2, h3, h4, h5, h6 {
     width: 36px;
     height: 36px;
   }
+  .btn {
+    white-space: normal;
+    text-align: center;
+  }
+  .btn-lg {
+    padding: 0.8rem 1.25rem;
+    font-size: 0.92rem;
+  }
+}
+
+/* App Main Content Mobile Spacing */
+.app-main-content {
+  padding-bottom: 74px; /* Clearance for fixed mobile bottom nav bar */
+}
+@media (min-width: 768px) {
+  .app-main-content {
+    padding-bottom: 0;
+  }
+}
+
+/* Display & Responsive Breakpoint Utilities */
+@media (max-width: 575.98px) {
+  .d-sm-none { display: none !important; }
+}
+@media (min-width: 576px) {
+  .d-sm-flex { display: flex !important; }
+  .d-sm-none { display: none !important; }
+  .d-sm-block { display: block !important; }
 }
 
 @media (max-width: 767.98px) {
   .d-md-none { display: flex !important; }
 }
-
 @media (min-width: 768px) {
   .d-md-none { display: none !important; }
   .d-md-flex { display: flex !important; }
+  .d-md-block { display: block !important; }
 }
 
 @media (min-width: 992px) {
   .d-lg-none { display: none !important; }
   .d-lg-flex { display: flex !important; }
+  .d-lg-block { display: block !important; }
+}
+
+/* Hero Section Mobile System */
+.hero-section {
+  padding: 4.5rem 0 5rem 0;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 3.5rem;
+}
+.hero-card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+@media (max-width: 767.98px) {
+  .hero-section {
+    padding: 2.5rem 0 3.5rem 0;
+  }
+  .hero-grid {
+    gap: 2rem;
+  }
+}
+@media (max-width: 480px) {
+  .hero-card-actions {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+}
+
+/* Category Pills Mobile System (2-Column Grid on Mobile) */
+.category-pills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.25rem;
+}
+@media (max-width: 576px) {
+  .category-pills-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+/* Shop Page Layout & Sidebar System */
+.shop-layout {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+}
+.shop-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 1.75rem;
+  position: sticky;
+  top: 90px;
+  box-shadow: var(--shadow-sm);
+}
+.shop-content {
+  flex: 1;
+  min-width: 0;
+}
+.shop-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 0.9rem 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+.shop-search-box {
+  display: flex;
+  align-items: center;
+  background: var(--bg-main);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 0.45rem 0.8rem;
+  width: 280px;
+}
+.shop-sort-box {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+@media (max-width: 991.98px) {
+  .shop-layout {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .shop-sidebar {
+    width: 100%;
+    position: static;
+    margin-bottom: 1rem;
+  }
+  .shop-sidebar.mobile-open {
+    display: block !important;
+    animation: slideUp 0.25s ease-out;
+  }
+}
+@media (max-width: 576px) {
+  .shop-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.85rem 1rem;
+  }
+  .shop-search-box {
+    width: 100%;
+  }
+  .shop-sort-box {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .shop-sort-box select {
+    flex: 1;
+  }
+}
+
+/* Product Detail Page Mobile System */
+.pdp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 3.5rem;
+  margin-bottom: 5rem;
+}
+.pdp-action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 767.98px) {
+  .pdp-grid {
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+}
+@media (max-width: 576px) {
+  .pdp-action-buttons {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* Modals & Forms Mobile Optimization */
+.modal-form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.quickview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 2rem;
+  padding: 2rem;
+}
+.quickview-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+@media (max-width: 576px) {
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+  .modal-container {
+    border-radius: 14px;
+    max-height: 94vh;
+  }
+  .modal-form-row-2 {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  .quickview-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding: 1.25rem 1rem;
+  }
+  .quickview-actions {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+  /* Prevent iOS Safari auto-zoom on input focus */
+  .form-input, .form-textarea, .form-select {
+    font-size: 16px !important;
+  }
 }
 
 /* ==========================================================================

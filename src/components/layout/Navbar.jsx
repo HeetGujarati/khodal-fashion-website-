@@ -104,7 +104,7 @@ export const Navbar = ({ currentView, setCurrentView, onOpenAdmin }) => {
                   <Search size={15} color="var(--gold-primary)" style={{ marginRight: '0.4rem' }} />
                   <input
                     type="text"
-                    placeholder="Search Rolex, Casio, Tissot..."
+                    placeholder="Search Rolex, Casio..."
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value);
@@ -117,7 +117,7 @@ export const Navbar = ({ currentView, setCurrentView, onOpenAdmin }) => {
                       outline: 'none',
                       color: 'var(--text-primary)',
                       fontSize: '0.85rem',
-                      width: '180px'
+                      width: 'clamp(110px, 28vw, 180px)'
                     }}
                   />
                   <button 
@@ -178,8 +178,8 @@ export const Navbar = ({ currentView, setCurrentView, onOpenAdmin }) => {
             <button
               onClick={onOpenAdmin}
               title="Khodal Fashion Store Admin Dashboard"
+              className="d-none d-sm-flex"
               style={{
-                display: 'flex',
                 alignItems: 'center',
                 gap: '0.35rem',
                 padding: '0.35rem 0.75rem',

@@ -25,13 +25,7 @@ export const CategoryPills = ({ onCategorySelect }) => {
           </p>
         </div>
 
-        <div 
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '1.25rem'
-          }}
-        >
+        <div className="category-pills-grid">
           {categories.map((cat, idx) => {
             const isSelected = selectedCategory === cat.id;
             return (

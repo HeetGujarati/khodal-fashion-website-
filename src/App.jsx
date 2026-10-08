@@ -17,6 +17,7 @@ import { Home, Compass, Heart, MessageCircle, ShoppingBag, CheckCircle, AlertCir
 
 const MainAppContent = () => {
   const [currentView, setCurrentView] = useState('home'); // 'home' | 'shop' | 'product-detail' | 'track' | 'wishlist'
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [isAdminOpen, setIsAdminOpen] = useState(() => {
     if (typeof window === 'undefined') return false;
     const search = window.location.search.toLowerCase();
@@ -100,7 +101,7 @@ const MainAppContent = () => {
       />
 
       {/* 3. Main Views */}
-      <main style={{ flex: 1 }}>
+      <main className="app-main-content" style={{ flex: 1 }}>
         {currentView === 'home' && (
           <HomePage 
             setCurrentView={setCurrentView}
@@ -176,15 +177,16 @@ const MainAppContent = () => {
           right: 0,
           background: 'rgba(255, 255, 255, 0.96)',
           backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           borderTop: '1px solid var(--border-subtle)',
-          padding: '0.5rem 1rem',
+          padding: '0.45rem 1rem calc(0.45rem + env(safe-area-inset-bottom, 0px))',
           display: 'flex',
           justifyContent: 'space-around',
           alignItems: 'center',
           zIndex: 890,
-          boxShadow: '0 -4px 16px rgba(0,0,0,0.04)'
+          boxShadow: '0 -4px 16px rgba(0,0,0,0.06)'
         }}
-        className="d-md-none"
+        className="mobile-bottom-bar d-md-none"
       >
         <button
           onClick={() => { setCurrentView('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}

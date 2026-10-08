@@ -5,6 +5,7 @@ import { Search, RotateCcw, SlidersHorizontal } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const ShopPage = ({ onSelectProduct, setCurrentView }) => {
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const { 
     products, 
     categories, 
@@ -74,20 +75,29 @@ export const ShopPage = ({ onSelectProduct, setCurrentView }) => {
           </p>
         </div>
 
-        {/* 2-Column Layout: Sidebar Filters & Product Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '2.5rem', alignItems: 'flex-start' }}>
+        {/* Mobile Filter Toggle Button */}
+        <div className="d-lg-none" style={{ marginBottom: '1.25rem' }}>
+          <button 
+            onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+            className="btn btn-outline-gold"
+            style={{ width: '100%', justifyContent: 'space-between', padding: '0.75rem 1.1rem', borderRadius: '10px' }}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+              <SlidersHorizontal size={16} />
+              <span>Filter Watches ({selectedCategory !== 'all' ? categories.find(c => c.id === selectedCategory)?.name || 'Filtered' : 'All Collections'})</span>
+            </span>
+            <span style={{ fontSize: '0.78rem', fontWeight: 700 }}>
+              {mobileFiltersOpen ? '▲ Hide Filters' : '▼ Show Filters'}
+            </span>
+          </button>
+        </div>
+
+        {/* 2-Column Responsive Layout: Sidebar Filters & Product Grid */}
+        <div className="shop-layout">
           
           {/* LEFT SIDEBAR: FILTERS */}
           <div 
-            style={{ 
-              background: '#FFFFFF', 
-              border: '1px solid var(--border-subtle)', 
-              borderRadius: '14px', 
-              padding: '1.75rem',
-              position: 'sticky',
-              top: '90px',
-              boxShadow: 'var(--shadow-sm)'
-            }}
+            className={`shop-sidebar ${mobileFiltersOpen ? 'mobile-open' : 'd-none d-lg-block'}`}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '0.75rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -112,7 +122,10 @@ export const ShopPage = ({ onSelectProduct, setCurrentView }) => {
                   return (
                     <div
                       key={c.id}
-                      onClick={() => setSelectedCategory(c.id)}
+                      onClick={() => {
+                        setSelectedCategory(c.id);
+                        setMobileFiltersOpen(false);
+                      }}
                       style={{
                         padding: '0.6rem 0.85rem',
                         borderRadius: '8px',
@@ -179,26 +192,12 @@ export const ShopPage = ({ onSelectProduct, setCurrentView }) => {
           </div>
 
           {/* RIGHT SIDE: PRODUCT GRID & TOP SORT */}
-          <div style={{ flex: 1, minWidth: 0, gridColumn: 'span 2' }}>
+          <div className="shop-content">
             {/* Top Toolbar */}
-            <div 
-              style={{ 
-                display: 'flex', 
-                flexWrap: 'wrap', 
-                alignItems: 'center', 
-                justifyContent: 'space-between', 
-                gap: '1rem',
-                marginBottom: '2rem',
-                background: '#FFFFFF',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: '12px',
-                padding: '0.9rem 1.25rem',
-                boxShadow: 'var(--shadow-sm)'
-              }}
-            >
+            <div className="shop-toolbar">
               {/* Search Bar */}
-              <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-main)', border: '1px solid var(--border-subtle)', borderRadius: '8px', padding: '0.45rem 0.8rem', width: '280px' }}>
-                <Search size={16} color="var(--gold-primary)" style={{ marginRight: '0.5rem' }} />
+              <div className="shop-search-box">
+                <Search size={16} color="var(--gold-primary)" style={{ marginRight: '0.5rem', flexShrink: 0 }} />
                 <input
                   type="text"
                   placeholder="Search by model or brand..."
@@ -209,8 +208,8 @@ export const ShopPage = ({ onSelectProduct, setCurrentView }) => {
               </div>
 
               {/* Sort By Dropdown */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>Sort By:</span>
+              <div className="shop-sort-box">
+                <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>Sort By:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}

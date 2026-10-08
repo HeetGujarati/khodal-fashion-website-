@@ -50,7 +50,7 @@ export const QuickViewModal = () => {
             <X size={18} />
           </button>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem', padding: '2rem' }}>
+          <div className="quickview-grid">
             {/* Left Column: Visual Gallery */}
             <div>
               <div 
@@ -189,7 +189,7 @@ export const QuickViewModal = () => {
 
               {/* CTAs */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: 'auto' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <div className="quickview-actions">
                   <motion.button
                     whileTap={{ scale: 0.98 }}
                     className="btn btn-dark"
