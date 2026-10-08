@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E5C158" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#AA771C" />
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="24" fill="#090B10" />
+  <circle cx="50" cy="50" r="38" stroke="url(#gold)" stroke-width="3" fill="none" />
+  <circle cx="50" cy="50" r="32" stroke="#252A36" stroke-width="1.5" fill="none" />
+  <!-- Watch Hands -->
+  <line x1="50" y1="50" x2="50" y2="26" stroke="url(#gold)" stroke-width="3" stroke-linecap="round" />
+  <line x1="50" y1="50" x2="68" y2="50" stroke="url(#gold)" stroke-width="2.5" stroke-linecap="round" />
+  <circle cx="50" cy="50" r="4" fill="url(#gold)" />
+  <!-- Hour Markers -->
+  <circle cx="50" cy="18" r="2" fill="url(#gold)" />
+  <circle cx="82" cy="50" r="2" fill="url(#gold)" />
+  <circle cx="50" cy="82" r="2" fill="url(#gold)" />
+  <circle cx="18" cy="50" r="2" fill="url(#gold)" />
+</svg>

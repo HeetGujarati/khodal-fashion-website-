@@ -1,0 +1,941 @@
+/* ==========================================================================
+   DITYA LUXURY TIMEPIECES - HAUTE HORLOGERIE MASTER LIGHT DESIGN SYSTEM
+   Editorial, Clean, Authentic Luxury Boutique Aesthetics
+   ========================================================================== */
+
+:root {
+  /* Editorial Luxury Light Backgrounds */
+  --bg-main: #FBFBFA;
+  --bg-surface: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F8F7F4;
+  --bg-subtle: #F5F4F0;
+  --bg-subtle-hover: #ECEAE3;
+  --bg-glass: rgba(255, 255, 255, 0.88);
+  --bg-glass-strong: rgba(255, 255, 255, 0.96);
+
+  /* Refined Horological Gold & Champagne Bronze */
+  --gold-primary: #946C1F;
+  --gold-light: #F7F3EA;
+  --gold-dark: #785412;
+  --gold-accent: #B08838;
+  --gold-border: rgba(148, 108, 31, 0.22);
+  --gold-border-strong: rgba(148, 108, 31, 0.45);
+  --gold-gradient: linear-gradient(135deg, #A8812A 0%, #BD9844 50%, #8A641B 100%);
+  --gold-gradient-subtle: linear-gradient(135deg, #FAF7F0 0%, #F2ECE0 100%);
+  --gold-glow: rgba(148, 108, 31, 0.12);
+
+  /* Private Horology Concierge WhatsApp Palette */
+  --wa-green: #0F8A5F;
+  --wa-dark: #0A6947;
+  --wa-hover: #0C7A53;
+  --wa-light: #EEF8F3;
+  --wa-border: rgba(15, 138, 95, 0.25);
+  --wa-gradient: linear-gradient(135deg, #128C7E 0%, #0F8A5F 100%);
+  --wa-glow: rgba(15, 138, 95, 0.2);
+
+  /* Deep Editorial Slate & Charcoal Typography */
+  --text-primary: #121826;
+  --text-secondary: #475467;
+  --text-muted: #8591A5;
+  --text-gold: #946C1F;
+
+  /* Clean Hairline Borders & Dividers */
+  --border-subtle: #E8E6DF;
+  --border-light: #D9D6CC;
+  --border-warm: #EFECE6;
+
+  /* Editorial Luxury Typography (Cormorant Garamond, Plus Jakarta Sans) */
+  --font-heading: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Subtle Natural Luxury Shadows */
+  --shadow-sm: 0 2px 8px rgba(18, 24, 38, 0.04);
+  --shadow-md: 0 8px 24px rgba(18, 24, 38, 0.06), 0 2px 6px rgba(18, 24, 38, 0.02);
+  --shadow-lg: 0 18px 44px rgba(18, 24, 38, 0.09), 0 4px 12px rgba(18, 24, 38, 0.03);
+  --shadow-gold: 0 8px 24px rgba(148, 108, 31, 0.18);
+  --shadow-wa: 0 8px 24px rgba(15, 138, 95, 0.25);
+
+  /* Transitions */
+  --transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Layout Utilities */
+.container {
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.gold-gradient-text {
+  color: var(--gold-primary);
+  display: inline-block;
+  font-weight: 700;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: #D9D6CC;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-primary);
+}
+
+/* Base Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.btn-sm {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.82rem;
+  border-radius: 6px;
+}
+
+.btn-lg {
+  padding: 0.9rem 1.8rem;
+  font-size: 0.98rem;
+  border-radius: 8px;
+}
+
+/* Dark Slate / Onyx Primary Button (Real High-End Horology Aesthetic) */
+.btn-dark {
+  background: #121826;
+  color: #FFFFFF;
+  border: 1px solid #121826;
+  box-shadow: 0 4px 14px rgba(18, 24, 38, 0.15);
+}
+.btn-dark:hover {
+  background: #252F42;
+  color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(18, 24, 38, 0.2);
+}
+
+/* Gold Luxury Button */
+.btn-gold {
+  background: var(--gold-gradient);
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: var(--shadow-gold);
+  border: none;
+}
+.btn-gold:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(148, 108, 31, 0.28);
+  filter: brightness(1.05);
+  color: #FFFFFF;
+}
+.btn-gold:active {
+  transform: translateY(0);
+}
+
+/* WhatsApp Concierge Button */
+.btn-whatsapp {
+  background: var(--wa-gradient);
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: var(--shadow-wa);
+  border: none;
+}
+.btn-whatsapp:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(15, 138, 95, 0.32);
+  filter: brightness(1.04);
+  color: #FFFFFF;
+}
+.btn-whatsapp:active {
+  transform: translateY(0);
+}
+
+/* Outline Gold CTA */
+.btn-outline-gold {
+  background: #FFFFFF;
+  color: var(--gold-primary);
+  border: 1px solid var(--gold-border-strong);
+}
+.btn-outline-gold:hover {
+  background: var(--gold-light);
+  color: var(--gold-dark);
+  border-color: var(--gold-primary);
+  transform: translateY(-1px);
+}
+
+/* Ghost Button */
+.btn-ghost {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+.btn-ghost:hover {
+  background: var(--bg-subtle-hover);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+/* Icon Button */
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.btn-icon:hover {
+  background: var(--gold-light);
+  color: var(--gold-primary);
+  border-color: var(--gold-border);
+  transform: scale(1.04);
+}
+
+/* Refined Pill Badges */
+.badge-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  background: var(--gold-light);
+  border: 1px solid var(--gold-border);
+  color: var(--gold-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.badge-discount {
+  background: #BE123C;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.7rem;
+  padding: 0.22rem 0.55rem;
+  border-radius: 4px;
+  letter-spacing: 0.03em;
+}
+
+.badge-stock {
+  background: #FEF3C7;
+  border: 1px solid #FDE68A;
+  color: #B45309;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.22rem 0.55rem;
+  border-radius: 4px;
+}
+
+/* Glass Panels */
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+}
+
+/* Top Announcement Bar - Refined Warm Luxury Bar */
+.announcement-bar {
+  background: #121826;
+  border-bottom: 1px solid rgba(148, 108, 31, 0.2);
+  font-size: 0.8rem;
+  padding: 0.45rem 1rem;
+  color: #F8F9FA;
+  overflow: hidden;
+  position: relative;
+  z-index: 50;
+}
+
+.announcement-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.announcement-ticker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: #E2E8F0;
+}
+
+/* Sticky Navbar - Crisp Pure White Boutique Nav */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: all var(--transition-smooth);
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  gap: 1.5rem;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.nav-brand-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gold-light);
+  border: 1px solid var(--gold-border);
+  box-shadow: 0 2px 8px rgba(148, 108, 31, 0.1);
+}
+
+.nav-brand-text h1 {
+  font-size: 1.25rem;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.nav-brand-text span {
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-primary);
+  font-weight: 700;
+}
+
+.nav-links {
+  display: none;
+  align-items: center;
+  gap: 1.75rem;
+  list-style: none;
+}
+
+@media (min-width: 992px) {
+  .nav-links {
+    display: flex;
+  }
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  transition: color var(--transition-fast);
+  padding: 0.4rem 0;
+  position: relative;
+  cursor: pointer;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--text-primary);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gold-primary);
+  border-radius: 2px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cart-btn-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--gold-primary);
+  color: #FFFFFF;
+  font-size: 0.68rem;
+  font-weight: 800;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Watch Product Card - Clean White Luxury Horology Card */
+.watch-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-smooth);
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.watch-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold-border-strong);
+  box-shadow: 0 16px 36px rgba(18, 24, 38, 0.09), 0 2px 8px rgba(18, 24, 38, 0.04);
+}
+
+.watch-card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #F6F5F2;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.watch-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.watch-card:hover .watch-card-img {
+  transform: scale(1.05);
+}
+
+.watch-card-top-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 2;
+}
+
+.watch-card-wishlist {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.watch-card-wishlist:hover {
+  color: #E11D48;
+  transform: scale(1.1);
+  background: #FFFFFF;
+}
+
+.watch-card-wishlist.active {
+  color: #E11D48;
+  fill: #E11D48;
+}
+
+.watch-card-body {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: #FFFFFF;
+}
+
+.watch-card-brand {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--gold-primary);
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.watch-card-title {
+  font-size: 1rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.watch-card-title:hover {
+  color: var(--gold-primary);
+}
+
+.watch-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+}
+
+.watch-card-pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  margin-bottom: 1.1rem;
+}
+
+.watch-price-current {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.watch-price-original {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.watch-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: auto;
+}
+
+/* Modals & Slide-out Drawers */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 24, 38, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.modal-container {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(18, 24, 38, 0.2);
+  position: relative;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-primary);
+}
+
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 24, 38, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.drawer-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 440px;
+  background: #FFFFFF;
+  border-left: 1px solid var(--border-subtle);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -10px 0 40px rgba(18, 24, 38, 0.12);
+  animation: slideRightIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-primary);
+}
+
+/* Floating WhatsApp Concierge */
+.floating-whatsapp {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: var(--wa-gradient);
+  color: #FFFFFF;
+  padding: 0.75rem 1.25rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  box-shadow: var(--shadow-wa);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all var(--transition-smooth);
+}
+
+.floating-whatsapp:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(15, 138, 95, 0.4);
+  color: #FFFFFF;
+}
+
+/* Toast Notification */
+.toast-container {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1200;
+  background: #FFFFFF;
+  border: 1px solid var(--gold-border-strong);
+  color: var(--text-primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  box-shadow: 0 10px 30px rgba(18, 24, 38, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes slideRightIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: translate(-50%, 15px) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+/* Form Controls */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  transition: all var(--transition-fast);
+}
+
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 3px rgba(148, 108, 31, 0.12);
+}
+
+.form-input::placeholder, .form-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Responsive Utilities (Crucial for hiding mobile bar on desktop) */
+.d-none { display: none !important; }
+
+@media (max-width: 576px) {
+  .navbar-inner {
+    height: 62px;
+    gap: 0.5rem;
+  }
+  .nav-brand {
+    gap: 0.5rem;
+  }
+  .nav-brand-logo {
+    width: 34px;
+    height: 34px;
+  }
+  .nav-brand-text h1 {
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+  }
+  .nav-brand-text span {
+    font-size: 0.55rem;
+    letter-spacing: 0.14em;
+  }
+  .btn-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .d-md-none { display: flex !important; }
+}
+
+@media (min-width: 768px) {
+  .d-md-none { display: none !important; }
+  .d-md-flex { display: flex !important; }
+}
+
+@media (min-width: 992px) {
+  .d-lg-none { display: none !important; }
+  .d-lg-flex { display: flex !important; }
+}
+
+/* ==========================================================================
+   ADMIN PORTAL MOBILE RESPONSIVE SYSTEM
+   ========================================================================== */
+.admin-portal {
+  min-height: 100vh;
+  display: flex;
+  background: #F8FAFC;
+  color: #0F172A;
+  font-family: var(--font-body);
+  position: relative;
+}
+
+.admin-sidebar {
+  width: 280px;
+  background: #0F172A;
+  color: #F8FAFC;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #1E293B;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 1000;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-header {
+  background: #FFFFFF;
+  border-bottom: 1px solid #E2E8F0;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: 1rem;
+}
+
+.admin-content {
+  padding: 2rem;
+  flex: 1;
+}
+
+.admin-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.25rem;
+}
+
+.admin-two-col {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.admin-form-row-2 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+}
+
+.admin-form-row-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.admin-form-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+/* Mobile Admin Adjustments (< 992px) */
+@media (max-width: 991.98px) {
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .admin-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999;
+  }
+
+  .admin-header {
+    padding: 0.85rem 1rem;
+  }
+
+  .admin-content {
+    padding: 1rem;
+  }
+
+  .admin-two-col {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .admin-form-row-2,
+  .admin-form-row-4,
+  .admin-form-row-3 {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .admin-stat-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.85rem;
+  }
+}
+
