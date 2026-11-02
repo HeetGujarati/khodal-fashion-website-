@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Heart, MessageCircle, Eye, Zap, Star } from 'lucide-react';
+import { Heart, Eye, Zap, Star } from 'lucide-react';
+import { WhatsAppIcon as MessageCircle } from '../common/BrandIcons';
 import { motion } from 'framer-motion';
 import { useStore } from '../../context/StoreContext';
 
@@ -125,33 +126,58 @@ export const ProductCard = ({ product, onSelectProduct }) => {
         </div>
 
         {/* Pricing */}
-        <div className="watch-card-pricing">
+        <div className="watch-card-pricing" style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
           <span className="watch-price-current">₹{product.price.toLocaleString('en-IN')}</span>
           {product.originalPrice && (
-            <span className="watch-price-original">₹{product.originalPrice.toLocaleString('en-IN')}</span>
+            <>
+              <span className="watch-price-original">₹{product.originalPrice.toLocaleString('en-IN')}</span>
+              <span style={{ fontSize: '0.7rem', color: '#16A34A', fontWeight: 700, background: '#DCFCE7', padding: '1px 6px', borderRadius: '4px' }}>
+                Save {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+              </span>
+            </>
           )}
         </div>
 
-        {/* Dual WhatsApp Actions */}
-        <div className="watch-card-actions">
+        {/* Dual WhatsApp Actions - Balanced Luxury Row */}
+        <div style={{ display: 'flex', gap: '0.45rem', marginTop: 'auto', paddingTop: '0.5rem' }}>
           <motion.button
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="btn btn-dark btn-sm"
             onClick={() => setQuickOrderProduct({ product, variant: product.variants?.[0]?.name || 'Standard' })}
-            style={{ width: '100%', gap: '0.45rem', fontSize: '0.84rem' }}
+            style={{ 
+              flex: 1, 
+              gap: '0.4rem', 
+              fontSize: '0.82rem', 
+              padding: '0.55rem 0.6rem',
+              fontWeight: 700,
+              background: '#0F172A',
+              border: '1px solid #1E293B',
+              letterSpacing: '0.02em'
+            }}
           >
-            <Zap size={14} />
+            <Zap size={13} color="#FACC15" />
             <span>Order On WhatsApp</span>
           </motion.button>
 
           <motion.button
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className="btn btn-whatsapp btn-sm"
             onClick={() => sendWhatsAppInquiry(product, product.variants?.[0]?.name)}
-            style={{ width: '100%', gap: '0.45rem', fontSize: '0.84rem' }}
+            title="Chat & Request Live Wrist Video on WhatsApp"
+            style={{ 
+              padding: '0.55rem 0.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.35rem',
+              fontSize: '0.82rem',
+              flexShrink: 0
+            }}
           >
-            <MessageCircle size={14} />
-            <span>Inquiry On WhatsApp</span>
+            <MessageCircle size={15} />
+            <span style={{ fontSize: '0.78rem', fontWeight: 600 }} className="d-none d-sm-inline">Inquire</span>
           </motion.button>
         </div>
       </div>

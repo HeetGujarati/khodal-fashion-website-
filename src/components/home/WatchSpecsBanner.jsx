@@ -51,23 +51,24 @@ export const WatchSpecsBanner = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: idx * 0.1 }}
-                whileHover={{ y: -4 }}
+                whileHover={{ y: -6, borderColor: 'var(--gold-border-strong)' }}
                 style={{
                   background: '#FFFFFF',
                   border: '1px solid var(--border-subtle)',
-                  borderRadius: '12px',
-                  padding: '2rem 1.5rem',
+                  borderRadius: '14px',
+                  padding: '2.2rem 1.75rem',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'flex-start',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)'
+                  boxShadow: '0 4px 14px rgba(18, 24, 38, 0.03)',
+                  transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
                 }}
               >
-                <div style={{ width: 48, height: 48, borderRadius: '10px', background: 'var(--gold-light)', border: '1px solid var(--gold-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
-                  <Icon size={22} color="var(--gold-primary)" />
+                <div style={{ width: 50, height: 50, borderRadius: '12px', background: 'var(--gold-light)', border: '1px solid var(--gold-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem', boxShadow: '0 2px 8px rgba(148, 108, 31, 0.12)' }}>
+                  <Icon size={24} color="var(--gold-primary)" />
                 </div>
-                <h4 style={{ fontSize: '1.05rem', color: 'var(--text-primary)', marginBottom: '0.5rem', fontWeight: 600 }}>{item.title}</h4>
-                <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{item.desc}</p>
+                <h4 style={{ fontSize: '1.08rem', color: 'var(--text-primary)', marginBottom: '0.5rem', fontWeight: 700 }}>{item.title}</h4>
+                <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>{item.desc}</p>
               </motion.div>
             );
           })}

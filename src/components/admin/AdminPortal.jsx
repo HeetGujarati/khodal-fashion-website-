@@ -4,7 +4,6 @@ import {
   Watch, 
   ShoppingBag, 
   Settings, 
-  Cloud, 
   Plus, 
   Trash2, 
   ArrowLeft, 
@@ -22,32 +21,23 @@ import {
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { ImageUploadDropzone } from './ImageUploadDropzone';
-import { 
-  getSupabaseConfig, 
-  saveSupabaseConfig, 
-  testSupabaseConnection, 
-  isSupabaseConfigured 
-} from '../../lib/supabase';
+import { KhodalLogo } from '../common/KhodalLogo';
 
 export const AdminPortal = ({ onBackToStore }) => {
   const { 
     storeConfig, 
-    setStoreConfig, 
+    updateStoreConfig, 
     products, 
-    setProducts, 
-    categories: _categories, 
+    addProduct, 
+    deleteProduct, 
+    orders, 
     showToast 
   } = useStore();
 
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'products' | 'add-product' | 'orders' | 'supabase' | 'settings'
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'products' | 'add-product' | 'orders' | 'settings'
   const [productSearch, setProductSearch] = useState('');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-
-  // Supabase Settings Form
-  const [supabaseForm, setSupabaseForm] = useState(getSupabaseConfig());
-  const [supabaseTestStatus, setSupabaseTestStatus] = useState(null);
-  const [isTestingSupabase, setIsTestingSupabase] = useState(false);
 
   // Store Settings Form
   const [configForm, setConfigForm] = useState({ ...storeConfig });
@@ -69,13 +59,8 @@ export const AdminPortal = ({ onBackToStore }) => {
     strap: 'Solid 316L Stainless Steel'
   });
 
-
-  // Load orders from localStorage
-  const savedOrders = JSON.parse(
-    localStorage.getItem('khodal_orders') || 
-    localStorage.getItem('ditya_orders') || 
-    '[]'
-  );
+  // Orders from Live State (Supabase DB + Local Storage)
+  const savedOrders = orders || [];
 
   // Sync config form if storeConfig updates
   useEffect(() => {
@@ -97,30 +82,14 @@ export const AdminPortal = ({ onBackToStore }) => {
   });
 
   // Handler: Save Store Settings
-  const handleSaveStoreSettings = (e) => {
+  const handleSaveStoreSettings = async (e) => {
     e.preventDefault();
-    setStoreConfig(configForm);
-    showToast('Store & WhatsApp configurations saved!', 'success');
-  };
-
-  // Handler: Save Supabase Credentials
-  const handleSaveSupabase = (e) => {
-    e.preventDefault();
-    saveSupabaseConfig(supabaseForm);
-    showToast('Supabase settings saved! Ready for image uploads.', 'success');
-  };
-
-  const handleTestSupabase = async () => {
-    setIsTestingSupabase(true);
-    setSupabaseTestStatus(null);
-    saveSupabaseConfig(supabaseForm);
-    const res = await testSupabaseConnection();
-    setSupabaseTestStatus(res);
-    setIsTestingSupabase(false);
+    await updateStoreConfig(configForm);
+    showToast('Store & WhatsApp configurations saved to database!', 'success');
   };
 
   // Handler: Add Watch to Catalog
-  const handleAddWatch = (e) => {
+  const handleAddWatch = async (e) => {
     e.preventDefault();
     if (!newWatch.title || !newWatch.price) {
       showToast('Watch title and price are mandatory.', 'error');
@@ -154,8 +123,8 @@ export const AdminPortal = ({ onBackToStore }) => {
       }
     };
 
-    setProducts([productToAdd, ...products]);
-    showToast(`Watch "${productToAdd.title}" added to store catalog!`, 'success');
+    await addProduct(productToAdd);
+    showToast(`Watch "${productToAdd.title}" added to store catalog & database!`, 'success');
     
     // Reset form
     setNewWatch({
@@ -177,15 +146,13 @@ export const AdminPortal = ({ onBackToStore }) => {
     setActiveTab('products');
   };
 
-  const handleDeleteProduct = (id, title) => {
+  const handleDeleteProduct = async (id, title) => {
     if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
-      setProducts(products.filter(p => p.id !== id));
+      await deleteProduct(id, title);
       showToast(`Removed "${title}" from catalog.`, 'info');
     }
   };
 
-
-  const hasCloud = isSupabaseConfigured();
 
   return (
     <div className="admin-portal">
@@ -202,9 +169,7 @@ export const AdminPortal = ({ onBackToStore }) => {
         {/* Brand Header */}
         <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #1E293B', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div style={{ width: 40, height: 40, borderRadius: '10px', background: 'linear-gradient(135deg, #D4AF37 0%, #AA820A 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(212, 175, 55, 0.3)' }}>
-              <Watch size={22} color="#FFFFFF" />
-            </div>
+            <KhodalLogo size={40} rounded="10px" />
             <div>
               <h2 style={{ fontSize: '1.05rem', fontWeight: 800, margin: 0, letterSpacing: '0.04em', color: '#FFFFFF' }}>KHODAL FASHION</h2>
               <span style={{ fontSize: '0.7rem', color: '#D4AF37', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Store Control Portal</span>
@@ -321,31 +286,6 @@ export const AdminPortal = ({ onBackToStore }) => {
           </button>
 
           <button
-            onClick={() => { setActiveTab('supabase'); setIsMobileSidebarOpen(false); }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '0.75rem 1rem',
-              borderRadius: '8px',
-              border: 'none',
-              background: activeTab === 'supabase' ? 'rgba(212, 175, 55, 0.15)' : 'transparent',
-              color: activeTab === 'supabase' ? '#FACC15' : '#94A3B8',
-              fontWeight: 600,
-              fontSize: '0.88rem',
-              cursor: 'pointer',
-              textAlign: 'left',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <Cloud size={18} />
-              <span>Supabase Cloud</span>
-            </div>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: hasCloud ? '#22C55E' : '#F59E0B' }} />
-          </button>
-
-          <button
             onClick={() => { setActiveTab('settings'); setIsMobileSidebarOpen(false); }}
             style={{
               display: 'flex',
@@ -416,17 +356,16 @@ export const AdminPortal = ({ onBackToStore }) => {
                 {activeTab === 'products' && 'Watch Inventory & Catalog'}
                 {activeTab === 'add-product' && 'Add New Luxury Watch'}
                 {activeTab === 'orders' && 'WhatsApp Orders History'}
-                {activeTab === 'supabase' && 'Supabase Cloud Sync'}
                 {activeTab === 'settings' && 'Storefront Configurations'}
               </h1>
             </div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
-            {/* Supabase status badge */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', background: hasCloud ? '#F0FDF4' : '#FFFBEB', border: `1px solid ${hasCloud ? '#BBF7D0' : '#FDE68A'}`, padding: '4px 8px', borderRadius: '20px', fontSize: '0.74rem', color: hasCloud ? '#166534' : '#B45309', fontWeight: 600 }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: hasCloud ? '#22C55E' : '#F59E0B' }} />
-              <span className="d-none d-md-inline">{hasCloud ? 'Supabase Connected' : 'Local Mode'}</span>
+            {/* Live store badge */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', background: '#F0FDF4', border: '1px solid #BBF7D0', padding: '4px 10px', borderRadius: '20px', fontSize: '0.74rem', color: '#166534', fontWeight: 600 }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22C55E' }} />
+              <span className="d-none d-md-inline">Store Online</span>
             </div>
 
             <button
@@ -554,24 +493,16 @@ export const AdminPortal = ({ onBackToStore }) => {
                     </p>
                   </div>
 
-                  <div style={{ background: hasCloud ? '#F0FDF4' : '#FFFBEB', border: `1px solid ${hasCloud ? '#BBF7D0' : '#FDE68A'}`, borderRadius: '10px', padding: '1rem' }}>
+                  <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '10px', padding: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-                      <Cloud size={16} color={hasCloud ? '#166534' : '#D97706'} />
-                      <strong style={{ fontSize: '0.86rem', color: hasCloud ? '#166534' : '#92400E' }}>
-                        {hasCloud ? 'Supabase Storage Active' : 'Supabase Not Configured'}
+                      <CheckCircle2 size={16} color="#16A34A" />
+                      <strong style={{ fontSize: '0.86rem', color: '#166534' }}>
+                        High-Resolution Media Engine
                       </strong>
                     </div>
-                    <p style={{ fontSize: '0.78rem', color: hasCloud ? '#166534' : '#92400E', margin: 0, lineHeight: 1.5 }}>
-                      {hasCloud 
-                        ? `Bucket: ${supabaseForm.bucket || 'watch-images'} is ready for cloud hosting.` 
-                        : 'Currently using local compressed storage. Configure Supabase in the tab for permanent cloud hosting.'}
+                    <p style={{ fontSize: '0.78rem', color: '#166534', margin: 0, lineHeight: 1.5 }}>
+                      Direct high-speed watch photography processing with instant client-side rendering and zero cloud setup required.
                     </p>
-                    <button
-                      onClick={() => setActiveTab('supabase')}
-                      style={{ marginTop: '0.75rem', background: '#0F172A', color: '#FFF', border: 'none', padding: '5px 12px', borderRadius: '6px', fontSize: '0.76rem', fontWeight: 600, cursor: 'pointer' }}
-                    >
-                      {hasCloud ? 'Manage Supabase' : 'Configure Supabase →'}
-                    </button>
                   </div>
 
                   <div style={{ marginTop: 'auto', background: '#F1F5F9', padding: '0.85rem', borderRadius: '8px' }}>
@@ -719,7 +650,7 @@ export const AdminPortal = ({ onBackToStore }) => {
                 </div>
 
                 <form onSubmit={handleAddWatch} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  {/* Photo Upload Area with Image Compressor & Supabase */}
+                  {/* Photo Upload Area with Smart Image Compressor */}
                   <div>
                     <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.5rem' }}>
                       Watch High-Resolution Image (Auto-Compressed with zero quality loss) *
@@ -964,148 +895,7 @@ export const AdminPortal = ({ onBackToStore }) => {
             </div>
           )}
 
-
-          {/* TAB 6: SUPABASE CLOUD SYNC */}
-          {activeTab === 'supabase' && (
-            <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid #E2E8F0', padding: '2rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem', borderBottom: '1px solid #E2E8F0', paddingBottom: '1.25rem' }}>
-                  <div style={{ width: 44, height: 44, borderRadius: '10px', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Cloud size={24} color="#2563EB" />
-                  </div>
-                  <div>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#0F172A' }}>Supabase Cloud Connection</h2>
-                    <p style={{ fontSize: '0.82rem', color: '#64748B', margin: '2px 0 0 0' }}>
-                      Connect your Supabase project to store compressed watch photos permanently in Cloud Storage.
-                    </p>
-                  </div>
-                </div>
-
-                <form onSubmit={handleSaveSupabase} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.4rem' }}>
-                      Supabase Project URL *
-                    </label>
-                    <input
-                      type="url"
-                      placeholder="https://xyzcompany.supabase.co"
-                      value={supabaseForm.url}
-                      onChange={(e) => setSupabaseForm({ ...supabaseForm, url: e.target.value })}
-                      style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '0.88rem' }}
-                    />
-                    <span style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
-                      Find this in your Supabase Dashboard → Project Settings → API
-                    </span>
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.4rem' }}>
-                      Supabase Anon / Public Key *
-                    </label>
-                    <input
-                      type="password"
-                      placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                      value={supabaseForm.anonKey}
-                      onChange={(e) => setSupabaseForm({ ...supabaseForm, anonKey: e.target.value })}
-                      style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '0.88rem' }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.4rem' }}>
-                      Storage Bucket Name
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="watch-images"
-                      value={supabaseForm.bucket}
-                      onChange={(e) => setSupabaseForm({ ...supabaseForm, bucket: e.target.value })}
-                      style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '0.88rem' }}
-                    />
-                    <span style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
-                      Ensure this bucket is set to <strong>Public</strong> in Supabase Storage.
-                    </span>
-                  </div>
-
-                  {supabaseTestStatus && (
-                    <div style={{
-                      padding: '0.85rem 1rem',
-                      borderRadius: '8px',
-                      fontSize: '0.82rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      background: supabaseTestStatus.success ? '#F0FDF4' : '#FEF2F2',
-                      border: `1px solid ${supabaseTestStatus.success ? '#BBF7D0' : '#FECACA'}`,
-                      color: supabaseTestStatus.success ? '#15803D' : '#B91C1C'
-                    }}>
-                      {supabaseTestStatus.success ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
-                      <span>{supabaseTestStatus.message}</span>
-                    </div>
-                  )}
-
-                  <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
-                    <button
-                      type="submit"
-                      style={{
-                        background: '#0F172A',
-                        color: '#FFFFFF',
-                        border: 'none',
-                        padding: '0.75rem 1.25rem',
-                        borderRadius: '8px',
-                        fontWeight: 700,
-                        fontSize: '0.88rem',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.4rem'
-                      }}
-                    >
-                      <Save size={16} />
-                      <span>Save Credentials</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={handleTestSupabase}
-                      disabled={isTestingSupabase}
-                      style={{
-                        background: '#F1F5F9',
-                        color: '#0F172A',
-                        border: '1px solid #CBD5E1',
-                        padding: '0.75rem 1.25rem',
-                        borderRadius: '8px',
-                        fontWeight: 700,
-                        fontSize: '0.88rem',
-                        cursor: isTestingSupabase ? 'wait' : 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.4rem'
-                      }}
-                    >
-                      <RefreshCw size={16} className={isTestingSupabase ? 'spinner' : ''} />
-                      <span>{isTestingSupabase ? 'Testing...' : 'Test Connection'}</span>
-                    </button>
-                  </div>
-                </form>
-
-                {/* Helpful Guide */}
-                <div style={{ marginTop: '2rem', padding: '1.25rem', background: '#F8FAFC', borderRadius: '10px', border: '1px solid #E2E8F0', fontSize: '0.82rem', color: '#475569', lineHeight: 1.6 }}>
-                  <strong style={{ color: '#0F172A', display: 'block', marginBottom: '0.35rem' }}>
-                    💡 How to get free Supabase credentials in 2 minutes:
-                  </strong>
-                  <ol style={{ paddingLeft: '1.25rem', margin: 0 }}>
-                    <li>Go to <a href="https://supabase.com" target="_blank" rel="noreferrer" style={{ color: '#2563EB' }}>supabase.com</a> and sign in / create a free project.</li>
-                    <li>Click on <strong>Storage</strong> in the left menu → Create new bucket named <code>watch-images</code> → Turn <strong>Public bucket ON</strong>.</li>
-                    <li>Go to <strong>Settings → API</strong> and copy your <strong>Project URL</strong> and <strong>anon public key</strong>.</li>
-                    <li>Paste them above and click "Save Credentials".</li>
-                  </ol>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 7: STORE SETTINGS */}
+          {/* TAB 4: STORE SETTINGS */}
           {activeTab === 'settings' && (
             <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid #E2E8F0', padding: '2rem' }}>

@@ -3,8 +3,10 @@ import { HeroBanner } from '../components/home/HeroBanner';
 import { CategoryPills } from '../components/home/CategoryPills';
 import { WatchSpecsBanner } from '../components/home/WatchSpecsBanner';
 import { ProductCard } from '../components/product/ProductCard';
+import { Testimonials } from '@/components/ui/demo';
 import { useStore } from '../context/StoreContext';
-import { MessageCircle, Star, CheckCircle, ArrowRight } from 'lucide-react';
+import { Star, CheckCircle, ArrowRight } from 'lucide-react';
+import { WhatsAppIcon as MessageCircle } from '../components/common/BrandIcons';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const HomePage = ({ setCurrentView, onSelectProduct }) => {
@@ -171,82 +173,8 @@ export const HomePage = ({ setCurrentView, onSelectProduct }) => {
         </div>
       </section>
 
-      {/* 6. Verified Reviews Section */}
-      <section style={{ padding: '5rem 0', background: 'var(--bg-main)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <span style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.16em', color: 'var(--gold-primary)', fontWeight: 700 }}>
-              TESTIMONIALS
-            </span>
-            <h2 style={{ fontSize: 'clamp(1.7rem, 3.5vw, 2.4rem)', color: 'var(--text-primary)', marginTop: '0.35rem', fontWeight: 600 }}>
-              What Khodal Fashion Clients Say
-            </h2>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-            {[
-              {
-                name: 'Karan Mehra',
-                city: 'Delhi',
-                watch: 'Tissot PRX Silver Ice-Blue',
-                review: 'Ordered from Khodal Fashion via WhatsApp and received the watch in Delhi in just 3 days! The ice-blue dial finish and weight of the solid steel bracelet are unbelievable at this price.',
-                rating: 5
-              },
-              {
-                name: 'Vikram Joshi',
-                city: 'Ahmedabad',
-                watch: 'Casio G-Shock GM2100 Octagon',
-                review: 'Khodal Fashion sent me a live video on WhatsApp before dispatch. The metal bezel is sharp and packaging was top notch with the metal tin box.',
-                rating: 5
-              },
-              {
-                name: 'Pooja Singhania',
-                city: 'Mumbai',
-                watch: 'Gucci Interlocking G Rose Gold',
-                review: 'Purchased for my sister’s engagement. The emerald green dial and diamond cuts look extremely royal. 100% recommended!',
-                rating: 5
-              }
-            ].map((rev, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.1 }}
-                whileHover={{ y: -3 }}
-                style={{
-                  background: '#FFFFFF',
-                  border: '1px solid var(--border-subtle)',
-                  borderRadius: '12px',
-                  padding: '1.75rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)'
-                }}
-              >
-                <div style={{ display: 'flex', gap: '0.25rem', marginBottom: '1rem', color: '#D97706' }}>
-                  {[...Array(rev.rating)].map((_, i) => (
-                    <Star key={i} size={15} fill="#D97706" color="#D97706" />
-                  ))}
-                </div>
-                <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.5rem', flex: 1, fontStyle: 'italic' }}>
-                  "{rev.review}"
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)', paddingTop: '1rem' }}>
-                  <div>
-                    <h5 style={{ fontSize: '0.92rem', color: 'var(--text-primary)', margin: 0, fontWeight: 600 }}>{rev.name}</h5>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Verified Buyer, {rev.city}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--wa-green)', fontSize: '0.72rem', fontWeight: 600 }}>
-                    <CheckCircle size={14} />
-                    <span>Verified Order</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 6. Continuous Vertical Marquee Testimonials */}
+      <Testimonials />
     </div>
   );
 };

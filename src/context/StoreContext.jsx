@@ -1,6 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { INITIAL_PRODUCTS } from '../data/products';
 import { CATEGORIES } from '../data/categories';
+import { 
+  fetchProductsFromDB, 
+  insertProductToDB, 
+  deleteProductFromDB, 
+  createOrderInDB, 
+  fetchOrdersFromDB, 
+  fetchStoreConfigFromDB, 
+  saveStoreConfigToDB,
+  isSupabaseConfigured 
+} from '../lib/supabase';
 
 const StoreContext = createContext();
 
@@ -9,14 +19,20 @@ export const StoreProvider = ({ children }) => {
   const [storeConfig, setStoreConfig] = useState(() => {
     const saved = localStorage.getItem('khodal_store_config') || localStorage.getItem('ditya_store_config');
     let parsed = saved ? JSON.parse(saved) : null;
-    if (parsed && (parsed.storeName?.includes('Ditya') || !parsed.storeName)) {
-      parsed.storeName = 'Khodal Fashion';
-      parsed.supportEmail = 'khodalfashion@gmail.com';
+    if (parsed) {
+      if (parsed.whatsappNumber === '7383556275' || !parsed.whatsappNumber) {
+        parsed.whatsappNumber = '7575023434';
+      }
+      if (parsed.storeName?.includes('Ditya') || !parsed.storeName) {
+        parsed.storeName = 'Khodal Fashion';
+        parsed.supportEmail = 'khodalfashion@gmail.com';
+      }
+      localStorage.setItem('khodal_store_config', JSON.stringify(parsed));
     }
     return parsed || {
       storeName: 'Khodal Fashion',
       tagline: 'Luxury Watches & Haute Horlogerie',
-      whatsappNumber: '7383556275',
+      whatsappNumber: '7575023434',
       supportEmail: 'khodalfashion@gmail.com',
       storeAddress: 'Office No-111, Green Plaza, Near DMart Mall, Mota Varacha, Surat, Gujarat',
       announcements: [
@@ -35,7 +51,6 @@ export const StoreProvider = ({ children }) => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // If cached state has older cosmetic/coffee/broken image references, rehydrate with new watch catalog
         if (JSON.stringify(parsed).includes('522335789203') || JSON.stringify(parsed).includes('509042239860') || JSON.stringify(parsed).includes('1547996160-71dfabb1d8a4')) {
           localStorage.setItem('khodal_products', JSON.stringify(INITIAL_PRODUCTS));
           return INITIAL_PRODUCTS;
@@ -47,6 +62,12 @@ export const StoreProvider = ({ children }) => {
     }
     localStorage.setItem('khodal_products', JSON.stringify(INITIAL_PRODUCTS));
     return INITIAL_PRODUCTS;
+  });
+
+  // Orders state (loaded from Supabase / localStorage)
+  const [orders, setOrders] = useState(() => {
+    const saved = localStorage.getItem('khodal_orders') || localStorage.getItem('ditya_orders');
+    return saved ? JSON.parse(saved) : [];
   });
 
   // Cart state
@@ -79,6 +100,10 @@ export const StoreProvider = ({ children }) => {
   }, [products]);
 
   useEffect(() => {
+    localStorage.setItem('khodal_orders', JSON.stringify(orders));
+  }, [orders]);
+
+  useEffect(() => {
     localStorage.setItem('khodal_cart', JSON.stringify(cart));
   }, [cart]);
 
@@ -90,12 +115,76 @@ export const StoreProvider = ({ children }) => {
     localStorage.setItem('khodal_store_config', JSON.stringify(storeConfig));
   }, [storeConfig]);
 
+  // Sync with Supabase Database on startup if configured
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+
+    // 1. Fetch live products from Supabase
+    fetchProductsFromDB().then((dbProducts) => {
+      if (dbProducts && dbProducts.length > 0) {
+        setProducts(dbProducts);
+        localStorage.setItem('khodal_products', JSON.stringify(dbProducts));
+      }
+    });
+
+    // 2. Fetch live store config
+    fetchStoreConfigFromDB().then((dbConfig) => {
+      if (dbConfig) {
+        setStoreConfig((prev) => ({ ...prev, ...dbConfig }));
+        localStorage.setItem('khodal_store_config', JSON.stringify(dbConfig));
+      }
+    });
+
+    // 3. Fetch live orders
+    fetchOrdersFromDB().then((dbOrders) => {
+      if (dbOrders && dbOrders.length > 0) {
+        setOrders(dbOrders);
+        localStorage.setItem('khodal_orders', JSON.stringify(dbOrders));
+      }
+    });
+  }, []);
+
   // Toast Notification
   const showToast = (message, type = 'success') => {
     setActiveToast({ message, type });
     setTimeout(() => {
       setActiveToast(null);
     }, 3500);
+  };
+
+  // Add Watch (DB + State + LocalStorage)
+  const addProduct = async (productData) => {
+    setProducts((prev) => [productData, ...prev]);
+    if (isSupabaseConfigured()) {
+      await insertProductToDB(productData);
+    }
+  };
+
+  // Delete Watch (DB + State + LocalStorage)
+  const deleteProduct = async (id, title) => {
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+    if (isSupabaseConfigured()) {
+      await deleteProductFromDB(id);
+    }
+  };
+
+  // Record an Order (DB + State + LocalStorage)
+  const saveOrder = async (orderData) => {
+    setOrders((prev) => [orderData, ...prev]);
+    const existing = JSON.parse(localStorage.getItem('khodal_orders') || '[]');
+    localStorage.setItem('khodal_orders', JSON.stringify([orderData, ...existing]));
+
+    if (isSupabaseConfigured()) {
+      await createOrderInDB(orderData);
+    }
+  };
+
+  // Save Config (DB + State)
+  const updateStoreConfig = async (newConfig) => {
+    setStoreConfig(newConfig);
+    if (isSupabaseConfigured()) {
+      await saveStoreConfigToDB(newConfig);
+    }
   };
 
   // Cart Handlers
@@ -208,12 +297,37 @@ export const StoreProvider = ({ children }) => {
   const sendCartWhatsAppOrder = (customerDetails = null) => {
     if (cart.length === 0) return;
 
+    const orderId = `KF-CART-${Math.floor(100000 + Math.random() * 900000)}`;
+
     let itemsList = '';
+    const cartItems = [];
     cart.forEach((item, index) => {
       itemsList += `${index + 1}. *${item.product.title}*\n   - Variant: ${item.variant}\n   - Qty: ${item.quantity} × ₹${item.product.price.toLocaleString('en-IN')}\n\n`;
+      cartItems.push({
+        title: item.product.title,
+        variant: item.variant,
+        quantity: item.quantity,
+        price: item.product.price,
+        image: item.product.images?.[0] || ''
+      });
     });
 
+    // Save cart order into database & localStorage
+    const savedCartOrder = {
+      orderId,
+      createdAt: new Date().toISOString(),
+      productTitle: `${cartTotalItems} Luxury Timepieces (${cart[0]?.product.title}...)`,
+      variant: 'Multi-Item Cart',
+      price: cartSubtotal,
+      totalAmount: cartSubtotal,
+      customer: customerDetails || { name: 'Direct Customer' },
+      items: cartItems,
+      status: 'Order Placed (WhatsApp Confirmed)'
+    };
+    saveOrder(savedCartOrder);
+
     let message = `🛒 *SHOPPING CART ORDER - ${storeConfig.storeName}* 🛒\n\n` +
+      `Order Ref: #${orderId}\n\n` +
       `Hello! I want to order the following ${cartTotalItems} timepieces:\n\n` +
       `${itemsList}` +
       `━━━━━━━━━━━━━━━━━━━━\n` +
@@ -238,8 +352,14 @@ export const StoreProvider = ({ children }) => {
     <StoreContext.Provider value={{
       storeConfig,
       setStoreConfig,
+      updateStoreConfig,
       products,
       setProducts,
+      addProduct,
+      deleteProduct,
+      orders,
+      setOrders,
+      saveOrder,
       categories: CATEGORIES,
       cart,
       addToCart,

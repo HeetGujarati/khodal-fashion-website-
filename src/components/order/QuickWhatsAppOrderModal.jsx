@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, MessageCircle, ShieldCheck, Truck, Check } from 'lucide-react';
+import { X, ShieldCheck, Truck, Check } from 'lucide-react';
+import { WhatsAppIcon as MessageCircle } from '../common/BrandIcons';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { useStore } from '../../context/StoreContext';
@@ -9,6 +10,7 @@ export const QuickWhatsAppOrderModal = () => {
     quickOrderProduct, 
     setQuickOrderProduct, 
     sendWhatsAppOrder,
+    saveOrder,
     storeConfig,
     showToast 
   } = useStore();
@@ -62,7 +64,7 @@ export const QuickWhatsAppOrderModal = () => {
       // ignore
     }
 
-    // Save order in localStorage with KF (Khodal Fashion) order code
+    // Save order in Supabase DB & localStorage with KF (Khodal Fashion) order code
     const orderId = `KF-${Math.floor(100000 + Math.random() * 900000)}`;
     const savedOrder = {
       orderId,
@@ -74,8 +76,7 @@ export const QuickWhatsAppOrderModal = () => {
       status: 'Order Placed (WhatsApp Confirmed)'
     };
 
-    const existingOrders = JSON.parse(localStorage.getItem('khodal_orders') || localStorage.getItem('ditya_orders') || '[]');
-    localStorage.setItem('khodal_orders', JSON.stringify([savedOrder, ...existingOrders]));
+    saveOrder(savedOrder);
 
     // Send order via WhatsApp
     sendWhatsAppOrder(product, selectedVariant, formData);

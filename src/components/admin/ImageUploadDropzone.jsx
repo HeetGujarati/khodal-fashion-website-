@@ -7,11 +7,10 @@ import {
   Trash2, 
   Sparkles, 
   Zap, 
-  Cloud, 
   Loader2
 } from 'lucide-react';
 import { compressWatchImage } from '../../utils/imageCompressor';
-import { uploadWatchImage, isSupabaseConfigured } from '../../lib/supabase';
+import { uploadWatchImage } from '../../lib/supabase';
 
 export const ImageUploadDropzone = ({ 
   currentImage, 
@@ -24,8 +23,6 @@ export const ImageUploadDropzone = ({
   const [uploadStatus, setUploadStatus] = useState(null); // { type: 'success' | 'error' | 'info', message: string }
   const [previewImage, setPreviewImage] = useState(currentImage || '');
   const fileInputRef = useRef(null);
-
-  const hasSupabase = isSupabaseConfigured();
 
   const processFile = async (file) => {
     if (!file) return;
@@ -55,12 +52,10 @@ export const ImageUploadDropzone = ({
       setCompressionStats(compressed);
       setPreviewImage(compressed.previewUrl);
 
-      // 2. Upload to Supabase Storage (or fallback to optimized Base64)
+      // 2. Process optimized watch image
       setUploadStatus({
         type: 'info',
-        message: hasSupabase 
-          ? 'Uploading compressed WebP to Supabase Storage...' 
-          : 'Processing optimized image data...'
+        message: 'Optimizing and preparing high-resolution watch photo...'
       });
 
       const uploadResult = await uploadWatchImage(compressed.file, productName);
@@ -75,9 +70,7 @@ export const ImageUploadDropzone = ({
 
         setUploadStatus({
           type: 'success',
-          message: uploadResult.isCloud 
-            ? `Uploaded to Supabase! Saved ${compressed.savingsPercent}% bandwidth (${compressed.originalFormatted} → ${compressed.compressedFormatted}).`
-            : `Image compressed by ${compressed.savingsPercent}% (${compressed.originalFormatted} → ${compressed.compressedFormatted}) with 100% sharpness.`
+          message: `Image optimized by ${compressed.savingsPercent}% (${compressed.originalFormatted} → ${compressed.compressedFormatted}) with 100% sharpness.`
         });
       }
     } catch (err) {
@@ -181,8 +174,8 @@ export const ImageUploadDropzone = ({
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.72rem', background: '#FFFFFF', padding: '3px 8px', borderRadius: '12px', border: '1px solid #E2E8F0', color: '#16A34A', fontWeight: 600 }}>
                   <Zap size={11} /> 500 KB Quality Compressor Active
                 </span>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.72rem', background: '#FFFFFF', padding: '3px 8px', borderRadius: '12px', border: '1px solid #E2E8F0', color: hasSupabase ? '#2563EB' : '#D97706', fontWeight: 600 }}>
-                  <Cloud size={11} /> {hasSupabase ? 'Supabase Storage Ready' : 'Local + Cloud Ready'}
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.72rem', background: '#FFFFFF', padding: '3px 8px', borderRadius: '12px', border: '1px solid #E2E8F0', color: '#0F172A', fontWeight: 600 }}>
+                  <Sparkles size={11} color="var(--gold-primary)" /> Ultra-HD Sharpness
                 </span>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowRight, MessageCircle, ShieldCheck, Truck, Clock } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { WhatsAppIcon as MessageCircle, SealIcon, ParcelIcon, MovementIcon } from '../common/BrandIcons';
 import { motion } from 'framer-motion';
 import { useStore } from '../../context/StoreContext';
 
@@ -16,7 +17,7 @@ export const HeroBanner = ({ onExploreClick }) => {
         position: 'relative', 
         overflow: 'hidden', 
         borderBottom: '1px solid var(--border-subtle)', 
-        background: 'linear-gradient(180deg, #FFFFFF 0%, #F9F8F5 100%)' 
+        background: 'radial-gradient(circle at 75% 30%, rgba(212, 175, 55, 0.08) 0%, rgba(255, 255, 255, 0) 55%), linear-gradient(180deg, #FFFFFF 0%, #FBF9F5 100%)' 
       }}
     >
       <div className="container">
@@ -64,7 +65,7 @@ export const HeroBanner = ({ onExploreClick }) => {
             >
               The Art of Timekeeping. <br />
               <span style={{ fontStyle: 'italic', fontWeight: 400, color: 'var(--gold-primary)' }}>
-                Mastered for Connoisseurs.
+                Crafted for Watch Lovers.
               </span>
             </h1>
 
@@ -100,18 +101,27 @@ export const HeroBanner = ({ onExploreClick }) => {
             </div>
 
             {/* Trust Highlights */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.75rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-subtle)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <ShieldCheck size={18} color="var(--gold-primary)" />
-                <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)' }}>100% Certified Authentic</span>
+            <div className="kf-hero-trust">
+              <div className="kf-hero-trust-item">
+                <SealIcon size={28} color="var(--gold-primary)" />
+                <div>
+                  <strong>Quality checked</strong>
+                  <small>Inspected before dispatch</small>
+                </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Truck size={18} color="var(--wa-green)" />
-                <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Free Insured Shipping</span>
+              <div className="kf-hero-trust-item">
+                <ParcelIcon size={28} color="var(--gold-primary)" />
+                <div>
+                  <strong>Free delivery</strong>
+                  <small>Insured, all over India</small>
+                </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Clock size={18} color="var(--gold-primary)" />
-                <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)' }}>1-Year Calibre Warranty</span>
+              <div className="kf-hero-trust-item">
+                <MovementIcon size={28} color="var(--gold-primary)" />
+                <div>
+                  <strong>1-year warranty</strong>
+                  <small>On the movement</small>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -125,12 +135,12 @@ export const HeroBanner = ({ onExploreClick }) => {
                 transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 style={{
                   background: '#FFFFFF',
-                  border: '1px solid var(--border-subtle)',
+                  border: '1px solid rgba(148, 108, 31, 0.25)',
                   borderRadius: '16px',
                   padding: '1.75rem',
                   maxWidth: '430px',
                   width: '100%',
-                  boxShadow: 'var(--shadow-lg)'
+                  boxShadow: '0 20px 50px -15px rgba(18, 24, 38, 0.1), 0 0 0 1px rgba(212, 175, 55, 0.12)'
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>

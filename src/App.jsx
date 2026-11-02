@@ -13,7 +13,8 @@ import { ShopPage } from './pages/ShopPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { TrackOrderPage } from './pages/TrackOrderPage';
 import { WishlistPage } from './pages/WishlistPage';
-import { Home, Compass, Heart, MessageCircle, ShoppingBag, CheckCircle, AlertCircle, Info } from 'lucide-react';
+import { Home, Compass, Heart, ShoppingBag, CheckCircle, AlertCircle, Info } from 'lucide-react';
+import { WhatsAppIcon as MessageCircle } from './components/common/BrandIcons';
 
 const MainAppContent = () => {
   const [currentView, setCurrentView] = useState('home'); // 'home' | 'shop' | 'product-detail' | 'track' | 'wishlist'
@@ -42,7 +43,7 @@ const MainAppContent = () => {
 
   const cleanPhone = storeConfig.whatsappNumber.replace(/[^0-9]/g, '');
 
-  // Auto-detect admin path, query or hash in URL (e.g. /admin, ?admin=true or #admin)
+  // Auto-detect admin path, query or hash in URL (e.g. /admin, ?admin=true or #admin) + Secret Hotkey
   React.useEffect(() => {
     const checkAdminQuery = () => {
       const search = window.location.search.toLowerCase();
@@ -53,11 +54,27 @@ const MainAppContent = () => {
       }
     };
     checkAdminQuery();
+
+    const handleKeyDown = (e) => {
+      // Secret Admin Hotkey: Ctrl + Shift + A
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        setIsAdminOpen(prev => {
+          const next = !prev;
+          if (next) window.location.hash = 'admin';
+          else window.history.replaceState(null, '', '/');
+          return next;
+        });
+      }
+    };
+
     window.addEventListener('hashchange', checkAdminQuery);
     window.addEventListener('popstate', checkAdminQuery);
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('hashchange', checkAdminQuery);
       window.removeEventListener('popstate', checkAdminQuery);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 
@@ -83,21 +100,12 @@ const MainAppContent = () => {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-main)' }}>
       {/* 1. Top Announcement Bar */}
-      <AnnouncementBar 
-        onOpenAdmin={() => {
-          setIsAdminOpen(true);
-          window.location.hash = 'admin';
-        }} 
-      />
+      <AnnouncementBar />
 
       {/* 2. Luxury Sticky Navbar */}
       <Navbar 
         currentView={currentView}
         setCurrentView={setCurrentView}
-        onOpenAdmin={() => {
-          setIsAdminOpen(true);
-          window.location.hash = 'admin';
-        }}
       />
 
       {/* 3. Main Views */}
@@ -140,10 +148,6 @@ const MainAppContent = () => {
       {/* 4. Luxury Footer */}
       <Footer 
         setCurrentView={setCurrentView} 
-        onOpenAdmin={() => {
-          setIsAdminOpen(true);
-          window.location.hash = 'admin';
-        }}
       />
 
       {/* 5. Persistent Floating WhatsApp Widget */}

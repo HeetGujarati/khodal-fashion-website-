@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
 import { ProductCard } from '../components/product/ProductCard';
 import { Search, RotateCcw, SlidersHorizontal } from 'lucide-react';
@@ -16,7 +16,8 @@ export const ShopPage = ({ onSelectProduct, setCurrentView }) => {
     sortBy, 
     setSortBy,
     priceRange, 
-    setPriceRange 
+    setPriceRange,
+    storeConfig 
   } = useStore();
 
   // Filter products
@@ -180,7 +181,7 @@ export const ShopPage = ({ onSelectProduct, setCurrentView }) => {
                 Searching for a specific watch model? Send us a reference photo on WhatsApp:
               </p>
               <a
-                href={`https://api.whatsapp.com/send?phone=917383556275&text=Hello!%20I%20am%20looking%20for%20a%20specific%20watch%20model.`}
+                href={`https://api.whatsapp.com/send?phone=91${storeConfig?.whatsappNumber || '7575023434'}&text=Hello!%20I%20am%20looking%20for%20a%20specific%20watch%20model.`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-whatsapp btn-sm"

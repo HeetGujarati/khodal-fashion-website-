@@ -5,13 +5,13 @@ import {
   Search, 
   Menu, 
   X, 
-  Watch,
-  Settings
+  Watch
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '../../context/StoreContext';
+import { KhodalLogo } from '../common/KhodalLogo';
 
-export const Navbar = ({ currentView, setCurrentView, onOpenAdmin }) => {
+export const Navbar = ({ currentView, setCurrentView }) => {
   const { 
     cartTotalItems, 
     setIsCartOpen, 
@@ -70,9 +70,7 @@ export const Navbar = ({ currentView, setCurrentView, onOpenAdmin }) => {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="nav-brand-logo">
-              <Watch size={22} color="var(--gold-primary)" />
-            </div>
+            <KhodalLogo size={42} rounded="10px" />
             <div className="nav-brand-text">
               <h1>KHODAL FASHION</h1>
               <span>HAUTE HORLOGERIE</span>
@@ -173,29 +171,6 @@ export const Navbar = ({ currentView, setCurrentView, onOpenAdmin }) => {
                 </span>
               )}
             </button>
-
-            {/* Client Store Manager Trigger */}
-            <button
-              onClick={onOpenAdmin}
-              title="Khodal Fashion Store Admin Dashboard"
-              className="d-none d-sm-flex"
-              style={{
-                alignItems: 'center',
-                gap: '0.35rem',
-                padding: '0.35rem 0.75rem',
-                borderRadius: '20px',
-                background: 'rgba(148, 108, 31, 0.08)',
-                border: '1px solid var(--gold-border)',
-                color: 'var(--gold-primary)',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <Settings size={14} />
-              <span>Admin</span>
-            </button>
           </div>
         </div>
       </nav>
@@ -221,10 +196,12 @@ export const Navbar = ({ currentView, setCurrentView, onOpenAdmin }) => {
             >
               {/* Header */}
               <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div className="nav-brand">
-                  <div className="nav-brand-logo">
-                    <Watch size={20} color="var(--gold-primary)" />
-                  </div>
+                <div 
+                  className="nav-brand"
+                  onClick={() => { setCurrentView('home'); setMobileMenuOpen(false); }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <KhodalLogo size={38} rounded="8px" />
                   <div className="nav-brand-text">
                     <h1>KHODAL FASHION</h1>
                     <span>LUXURY HOROLOGY</span>
@@ -260,35 +237,6 @@ export const Navbar = ({ currentView, setCurrentView, onOpenAdmin }) => {
                     <span style={{ color: 'var(--gold-primary)', fontSize: '0.8rem' }}>→</span>
                   </motion.div>
                 ))}
-
-                <motion.div
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenAdmin();
-                  }}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navItems.length * 0.04 }}
-                  style={{
-                    marginTop: '0.5rem',
-                    padding: '0.75rem 1rem',
-                    borderRadius: '8px',
-                    background: 'rgba(148, 108, 31, 0.08)',
-                    border: '1px solid var(--gold-border)',
-                    color: 'var(--gold-primary)',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Settings size={16} />
-                    <span>Admin Dashboard</span>
-                  </div>
-                  <span style={{ color: 'var(--gold-primary)', fontSize: '0.8rem' }}>⚙</span>
-                </motion.div>
               </div>
 
               {/* WhatsApp Contact Box in Mobile Menu */}

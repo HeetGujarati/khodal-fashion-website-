@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
-import { 
-  Heart, 
-  MessageCircle, 
-  ShoppingBag, 
-  Zap, 
-  Star, 
-  Check, 
-  ArrowLeft,
-  Share2,
-  PackageCheck
-} from 'lucide-react';
+import { Heart, ShoppingBag, Zap, Star, Check, ArrowLeft, Share2, PackageCheck } from 'lucide-react';
+import { WhatsAppIcon as MessageCircle } from '../components/common/BrandIcons';
 import { motion } from 'framer-motion';
 import { useStore } from '../context/StoreContext';
 import { ProductCard } from '../components/product/ProductCard';

@@ -37,10 +37,10 @@ export const CategoryPills = ({ onCategorySelect }) => {
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
                 whileHover={{ y: -4 }}
                 style={{
-                  background: isSelected ? '#FAF8F4' : '#FFFFFF',
-                  border: isSelected ? '2px solid var(--gold-primary)' : '1px solid var(--border-subtle)',
-                  borderRadius: '12px',
-                  padding: '1.4rem 1rem',
+                  background: isSelected ? 'linear-gradient(180deg, #FBF8F2 0%, #F7F1E6 100%)' : '#FFFFFF',
+                  border: isSelected ? '1.5px solid var(--gold-primary)' : '1px solid var(--border-subtle)',
+                  borderRadius: '14px',
+                  padding: '1.5rem 1rem',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -48,22 +48,23 @@ export const CategoryPills = ({ onCategorySelect }) => {
                   cursor: 'pointer',
                   position: 'relative',
                   overflow: 'hidden',
-                  boxShadow: isSelected ? '0 8px 24px rgba(148, 108, 31, 0.12)' : '0 2px 6px rgba(0,0,0,0.02)'
+                  boxShadow: isSelected ? '0 12px 28px rgba(148, 108, 31, 0.14)' : '0 2px 8px rgba(18, 24, 38, 0.03)',
+                  transition: 'all 0.25s ease'
                 }}
               >
-                {/* Category Thumbnail */}
+                {/* Category Thumbnail with Horology Bezel Ring */}
                 <motion.div 
                   style={{
-                    width: '74px',
-                    height: '74px',
+                    width: '80px',
+                    height: '80px',
                     borderRadius: '50%',
                     overflow: 'hidden',
                     marginBottom: '1rem',
-                    border: isSelected ? '2px solid var(--gold-primary)' : '1px solid var(--border-subtle)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                    border: isSelected ? '3px solid var(--gold-primary)' : '2px solid rgba(148, 108, 31, 0.28)',
+                    boxShadow: isSelected ? '0 0 0 4px rgba(148, 108, 31, 0.18), 0 6px 16px rgba(0,0,0,0.1)' : '0 3px 10px rgba(0,0,0,0.06)',
                     background: '#F5F4F0'
                   }}
-                  whileHover={{ scale: 1.06 }}
+                  whileHover={{ scale: 1.08 }}
                 >
                   <img
                     src={cat.image}
@@ -72,23 +73,32 @@ export const CategoryPills = ({ onCategorySelect }) => {
                   />
                 </motion.div>
 
-                <h4 style={{ fontSize: '0.96rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
+                <h4 style={{ fontSize: '0.96rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
                   {cat.name}
                 </h4>
 
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
+                <span style={{ 
+                  fontSize: '0.7rem', 
+                  color: isSelected ? 'var(--gold-dark)' : 'var(--text-muted)', 
+                  marginBottom: '0.85rem',
+                  fontWeight: 600,
+                  background: isSelected ? 'rgba(148, 108, 31, 0.12)' : 'var(--bg-subtle)',
+                  padding: '2px 8px',
+                  borderRadius: '12px'
+                }}>
                   {cat.badge}
                 </span>
 
                 <div 
                   style={{
-                    fontSize: '0.76rem',
+                    fontSize: '0.78rem',
                     fontWeight: 700,
                     color: isSelected ? 'var(--gold-primary)' : 'var(--text-secondary)',
-                    marginTop: 'auto'
+                    marginTop: 'auto',
+                    letterSpacing: '0.03em'
                   }}
                 >
-                  {isSelected ? '● Selected' : 'Explore →'}
+                  {isSelected ? '● Viewing Collection' : 'Explore →'}
                 </div>
               </motion.div>
             );

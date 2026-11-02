@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, MessageCircle, Heart, ShoppingBag, Zap, Star } from 'lucide-react';
+import { X, Heart, ShoppingBag, Zap, Star } from 'lucide-react';
+import { WhatsAppIcon as MessageCircle } from '../common/BrandIcons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '../../context/StoreContext';
 

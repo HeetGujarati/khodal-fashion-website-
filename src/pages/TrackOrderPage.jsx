@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Search, Truck, CheckCircle2, MessageCircle, Package } from 'lucide-react';
+import { Search, Truck, CheckCircle2, Package } from 'lucide-react';
+import { WhatsAppIcon as MessageCircle } from '../components/common/BrandIcons';
 import { useStore } from '../context/StoreContext';
 
 export const TrackOrderPage = () => {

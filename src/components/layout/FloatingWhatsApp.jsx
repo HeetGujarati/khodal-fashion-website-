@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MessageCircle, X } from 'lucide-react';
+import { X } from 'lucide-react';
+import { WhatsAppIcon as MessageCircle } from '../common/BrandIcons';
 import { useStore } from '../../context/StoreContext';
 
 export const FloatingWhatsApp = () => {

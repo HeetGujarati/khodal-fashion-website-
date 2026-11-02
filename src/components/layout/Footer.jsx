@@ -1,227 +1,219 @@
 import React from 'react';
-import { 
-  Watch, 
-  Phone, 
-  Mail, 
-  MapPin, 
-  ShieldCheck, 
-  Truck, 
-  Clock, 
-  MessageCircle 
-} from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, ArrowUpRight } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
+import { KhodalLogo } from '../common/KhodalLogo';
+import {
+  WhatsAppIcon,
+  SealIcon,
+  ParcelIcon,
+  MovementIcon,
+  LiveVideoIcon,
+  BrandMark
+} from '../common/BrandIcons';
 
-export const Footer = ({ setCurrentView, onOpenAdmin }) => {
+const TRUST_POINTS = [
+  {
+    num: 'I',
+    Icon: SealIcon,
+    title: 'Checked before it ships',
+    text: 'Every watch is inspected, timed and photographed before dispatch.'
+  },
+  {
+    num: 'II',
+    Icon: ParcelIcon,
+    title: 'Free insured delivery',
+    text: 'Shipped across India in 2–5 days with live tracking.'
+  },
+  {
+    num: 'III',
+    Icon: MovementIcon,
+    title: '1-year movement warranty',
+    text: 'Plus a 7-day easy exchange if it’s not quite right.'
+  },
+  {
+    num: 'IV',
+    Icon: LiveVideoIcon,
+    title: 'See it live first',
+    text: 'Ask for a real wrist video on WhatsApp before you pay.'
+  }
+];
+
+const PAYMENTS = [
+  { name: 'googlepay', label: 'Google Pay', h: 16 },
+  { name: 'phonepe', label: 'PhonePe', h: 18 },
+  { name: 'paytm', label: 'Paytm', h: 12 },
+  { name: 'visa', label: 'Visa', h: 12 },
+  { name: 'mastercard', label: 'Mastercard', h: 18 },
+  { name: 'americanexpress', label: 'American Express', h: 18 }
+];
+
+export const Footer = ({ setCurrentView }) => {
   const { storeConfig, setSelectedCategory } = useStore();
+  const phone = storeConfig.whatsappNumber;
 
-  const handleCategoryClick = (catId) => {
+  const goCategory = (catId) => {
     setSelectedCategory(catId);
     setCurrentView('shop');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const goView = (view) => {
+    setCurrentView(view);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const waLink = (msg) =>
+    `https://api.whatsapp.com/send?phone=91${phone}&text=${encodeURIComponent(msg)}`;
+
   return (
-    <footer style={{ background: '#F8F7F4', borderTop: '1px solid var(--border-subtle)', marginTop: '5rem', paddingTop: '4rem', paddingBottom: '2.5rem' }}>
-      <div className="container">
-        {/* Top Trust Banner */}
-        <div 
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
-            gap: '1.5rem', 
-            padding: '2rem', 
-            background: '#FFFFFF', 
-            border: '1px solid var(--border-subtle)', 
-            borderRadius: '14px',
-            marginBottom: '4rem',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: 46, height: 46, borderRadius: '50%', background: 'var(--gold-light)', border: '1px solid var(--gold-border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <ShieldCheck size={24} color="var(--gold-primary)" />
-            </div>
-            <div>
-              <h4 style={{ fontSize: '0.92rem', color: 'var(--text-primary)', marginBottom: '0.15rem', fontWeight: 600 }}>100% Genuine Quality</h4>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Authentic craft & calibre testing</p>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: 46, height: 46, borderRadius: '50%', background: 'var(--wa-light)', border: '1px solid var(--wa-border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Truck size={24} color="var(--wa-green)" />
-            </div>
-            <div>
-              <h4 style={{ fontSize: '0.92rem', color: 'var(--text-primary)', marginBottom: '0.15rem', fontWeight: 600 }}>Express Pan-India</h4>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Insured bubble-cushioned delivery</p>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: 46, height: 46, borderRadius: '50%', background: 'var(--gold-light)', border: '1px solid var(--gold-border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Clock size={24} color="var(--gold-primary)" />
-            </div>
-            <div>
-              <h4 style={{ fontSize: '0.92rem', color: 'var(--text-primary)', marginBottom: '0.15rem', fontWeight: 600 }}>1-Year Movement Warranty</h4>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Complete after-sales assistance</p>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: 46, height: 46, borderRadius: '50%', background: 'var(--wa-light)', border: '1px solid var(--wa-border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <MessageCircle size={24} color="var(--wa-green)" />
-            </div>
-            <div>
-              <h4 style={{ fontSize: '0.92rem', color: 'var(--text-primary)', marginBottom: '0.15rem', fontWeight: 600 }}>Instant WhatsApp Concierge</h4>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>Live video demos before purchase</p>
-            </div>
+    <>
+      {/* ================= TRUST BAND (editorial, light) ================= */}
+      <section className="kf-trust-band" aria-label="Why shop with Khodal Fashion">
+        <div className="container">
+          <div className="kf-trust-grid">
+            {TRUST_POINTS.map(({ num, Icon, title, text }) => (
+              <div className="kf-trust-item" key={num}>
+                <div className="kf-trust-head">
+                  <Icon size={30} color="var(--gold-primary)" />
+                  <span className="kf-trust-num">{num}</span>
+                </div>
+                <h4 className="kf-trust-title">{title}</h4>
+                <p className="kf-trust-text">{text}</p>
+              </div>
+            ))}
           </div>
         </div>
+      </section>
 
-        {/* 4-Column Footer Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '3rem', marginBottom: '3.5rem' }}>
-          {/* Column 1: Brand Info */}
-          <div>
-            <div className="nav-brand" style={{ marginBottom: '1rem' }}>
-              <div className="nav-brand-logo">
-                <Watch size={20} color="var(--gold-primary)" />
-              </div>
-              <div className="nav-brand-text">
-                <h1>KHODAL FASHION</h1>
-                <span>HAUTE HORLOGERIE</span>
+      {/* ================= MAIN FOOTER (obsidian) ================= */}
+      <footer className="kf-footer">
+        <div className="container">
+          {/* Top: brand statement + WhatsApp CTA */}
+          <div className="kf-footer-top">
+            <div className="kf-footer-brand">
+              <KhodalLogo size={56} rounded="50%" />
+              <div>
+                <div className="kf-footer-wordmark">Khodal Fashion</div>
+                <div className="kf-footer-sub">Watch Boutique · Surat, India</div>
               </div>
             </div>
-            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '1.25rem' }}>
-              Khodal Fashion is India's premier luxury horology boutique. Delivering precision Japanese & Swiss automatic calibres, executive chronographs, and iconic solid-steel bracelets directly to connoisseurs.
+
+            <p className="kf-footer-statement">
+              Good watches, honestly priced — <em>chosen by hand</em> and delivered to your door.
             </p>
+
             <a
-              href={`https://api.whatsapp.com/send?phone=91${storeConfig.whatsappNumber}&text=Hello%20Khodal%20Fashion!%20I%20want%20to%20inquire%20about%20your%20luxury%20watches.`}
+              href={waLink('Hello Khodal Fashion! I would like to see your latest watches.')}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-whatsapp btn-sm"
-              style={{ display: 'inline-flex' }}
+              className="kf-footer-wa"
             >
-              <MessageCircle size={15} />
-              Connect on WhatsApp
+              <WhatsAppIcon size={20} color="#25D366" />
+              <span>
+                <small>Chat with us</small>
+                +91 {phone}
+              </span>
+              <ArrowUpRight size={16} />
             </a>
           </div>
 
-          {/* Column 2: Watch Collections */}
-          <div>
-            <h4 style={{ fontSize: '0.88rem', color: 'var(--text-primary)', marginBottom: '1.25rem', letterSpacing: '0.08em', fontWeight: 700, textTransform: 'uppercase' }}>COLLECTIONS</h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.86rem' }}>
-              <li>
-                <span onClick={() => handleCategoryClick('mens-watches')} style={{ color: 'var(--text-secondary)', cursor: 'pointer', transition: 'color 0.2s' }}>
-                  Men's Luxury Editions
-                </span>
-              </li>
-              <li>
-                <span onClick={() => handleCategoryClick('automatic')} style={{ color: 'var(--text-secondary)', cursor: 'pointer', transition: 'color 0.2s' }}>
-                  Automatic & Skeleton Work
-                </span>
-              </li>
-              <li>
-                <span onClick={() => handleCategoryClick('chronograph')} style={{ color: 'var(--text-secondary)', cursor: 'pointer', transition: 'color 0.2s' }}>
-                  Chronograph & Tachymeters
-                </span>
-              </li>
-              <li>
-                <span onClick={() => handleCategoryClick('ladies-watches')} style={{ color: 'var(--text-secondary)', cursor: 'pointer', transition: 'color 0.2s' }}>
-                  Ladies Diamond & Rose Gold
-                </span>
-              </li>
-              <li>
-                <span onClick={() => handleCategoryClick('luxury-limited')} style={{ color: 'var(--text-secondary)', cursor: 'pointer', transition: 'color 0.2s' }}>
-                  Limited Masterpiece Homages
-                </span>
-              </li>
-            </ul>
-          </div>
+          {/* Link columns */}
+          <div className="kf-footer-cols">
+            <div>
+              <h5 className="kf-footer-h">Shop</h5>
+              <ul className="kf-footer-list">
+                <li><button onClick={() => goCategory('all')}>All Watches</button></li>
+                <li><button onClick={() => goCategory('mens-watches')}>Men’s Watches</button></li>
+                <li><button onClick={() => goCategory('ladies-watches')}>Women’s Watches</button></li>
+                <li><button onClick={() => goCategory('automatic')}>Automatic</button></li>
+                <li><button onClick={() => goCategory('chronograph')}>Chronograph</button></li>
+              </ul>
+            </div>
 
-          {/* Column 3: Customer Care & Tracking */}
-          <div>
-            <h4 style={{ fontSize: '0.88rem', color: 'var(--text-primary)', marginBottom: '1.25rem', letterSpacing: '0.08em', fontWeight: 700, textTransform: 'uppercase' }}>CUSTOMER CARE</h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.86rem' }}>
-              <li>
-                <span onClick={() => { setCurrentView('track'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{ color: 'var(--text-secondary)', cursor: 'pointer' }}>
-                  Live Order Tracking
-                </span>
-              </li>
-              <li>
-                <span onClick={() => { setCurrentView('shop'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{ color: 'var(--text-secondary)', cursor: 'pointer' }}>
-                  Explore All 50+ Models
-                </span>
-              </li>
-              <li>
-                <a href={`https://api.whatsapp.com/send?phone=91${storeConfig.whatsappNumber}&text=Hello%20Khodal%20Fashion!%20I%20want%20to%20request%20video%20call%20preview.`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>
-                  Request Video Call Preview
-                </a>
-              </li>
-              <li>
-                <span style={{ color: 'var(--text-secondary)' }}>
-                  Exchange Policy: 7 Days Seamless
-                </span>
-              </li>
-              <li>
-                <span style={{ color: 'var(--text-secondary)' }}>
-                  Packaging: Luxury Hardcase Tin Box
-                </span>
-              </li>
-              {onOpenAdmin && (
+            <div>
+              <h5 className="kf-footer-h">Help</h5>
+              <ul className="kf-footer-list">
+                <li><button onClick={() => goView('track')}>Track your order</button></li>
+                <li><button onClick={() => goView('wishlist')}>Your wishlist</button></li>
                 <li>
-                  <span onClick={onOpenAdmin} style={{ color: 'var(--gold-primary)', cursor: 'pointer', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                    ⚙ Store Admin Dashboard
-                  </span>
+                  <a href={waLink('Hello! I would like a live video of a watch before ordering.')} target="_blank" rel="noopener noreferrer">
+                    Request a live video
+                  </a>
                 </li>
-              )}
-            </ul>
+                <li><span>7-day easy exchange</span></li>
+                <li><span>Cash on delivery available</span></li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 className="kf-footer-h">Visit</h5>
+              <ul className="kf-footer-contact">
+                <li>
+                  <MapPin size={15} strokeWidth={1.5} />
+                  <span>{storeConfig.storeAddress}</span>
+                </li>
+                <li>
+                  <Phone size={15} strokeWidth={1.5} />
+                  <a href={`tel:+91${phone}`}>+91 {phone}</a>
+                </li>
+                <li>
+                  <Mail size={15} strokeWidth={1.5} />
+                  <a href={`mailto:${storeConfig.supportEmail}`}>{storeConfig.supportEmail}</a>
+                </li>
+                <li>
+                  <Clock size={15} strokeWidth={1.5} />
+                  <span>Mon–Sun · 10 AM – 9 PM</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 className="kf-footer-h">Follow</h5>
+              <div className="kf-footer-social">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                  <BrandMark name="instagram" label="Instagram" height={18} mono />
+                </a>
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                  <BrandMark name="facebook" label="Facebook" height={18} mono />
+                </a>
+                <a href={waLink('Hello Khodal Fashion!')} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                  <WhatsAppIcon size={18} color="rgba(255,255,255,0.75)" />
+                </a>
+              </div>
+              <p className="kf-footer-note">
+                New arrivals every week. Follow us for real wrist shots and unboxing videos.
+              </p>
+            </div>
           </div>
 
-          {/* Column 4: Contact & Store Address */}
-          <div>
-            <h4 style={{ fontSize: '0.88rem', color: 'var(--text-primary)', marginBottom: '1.25rem', letterSpacing: '0.08em', fontWeight: 700, textTransform: 'uppercase' }}>OFFICIAL BOUTIQUE</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <MapPin size={17} color="var(--gold-primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <span>{storeConfig.storeAddress}</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <Phone size={17} color="var(--gold-primary)" style={{ flexShrink: 0 }} />
-                <a href={`tel:+91${storeConfig.whatsappNumber}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                  +91 {storeConfig.whatsappNumber}
-                </a>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <Mail size={17} color="var(--gold-primary)" style={{ flexShrink: 0 }} />
-                <a href={`mailto:${storeConfig.supportEmail}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                  {storeConfig.supportEmail}
-                </a>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <Clock size={17} color="var(--gold-primary)" style={{ flexShrink: 0 }} />
-                <span>24x7 WhatsApp Orders & Concierge</span>
-              </div>
+          {/* Payments */}
+          <div className="kf-footer-pay">
+            <span className="kf-footer-pay-label">We accept</span>
+            <div className="kf-footer-pay-row">
+              {PAYMENTS.map((p) => (
+                <span className="kf-pay-chip" key={p.name}>
+                  <BrandMark name={p.name} label={p.label} height={p.h} />
+                </span>
+              ))}
+              <span className="kf-pay-chip kf-pay-text">UPI</span>
+              <span className="kf-pay-chip kf-pay-text">COD</span>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="kf-footer-bottom">
+            <div onDoubleClick={() => { window.location.hash = 'admin'; }} style={{ cursor: 'default' }}>
+              © {new Date().getFullYear()} {storeConfig.storeName}. All rights reserved.
+            </div>
+            <div className="kf-footer-legal">
+              <span>Privacy</span>
+              <span>Terms</span>
+              <span>Shipping</span>
+              <span>Returns</span>
             </div>
           </div>
         </div>
-
-        {/* Bottom Line */}
-        <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-          <div>
-            © 2026 {storeConfig.storeName}. All rights reserved. Designed for Fine Horology Enthusiasts.
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            <span>Privacy Policy</span>
-            <span>Terms of Service</span>
-            <span>Shipping Policy</span>
-            {onOpenAdmin && (
-              <span onClick={onOpenAdmin} style={{ cursor: 'pointer', color: 'var(--gold-primary)', fontWeight: 600 }}>
-                ⚙ Admin Portal
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </footer>
+      </footer>
+    </>
   );
 };

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, MessageCircle, Sparkles, Truck, ShieldCheck } from 'lucide-react';
+import { Phone, Sparkles, Truck, ShieldCheck } from 'lucide-react';
+import { WhatsAppIcon as MessageCircle } from '../common/BrandIcons';
 import { useStore } from '../../context/StoreContext';
 
-export const AnnouncementBar = ({ onOpenAdmin }) => {
+export const AnnouncementBar = () => {
   const { storeConfig } = useStore();
   const [currentIdx, setCurrentIdx] = useState(0);
 
@@ -48,7 +49,7 @@ export const AnnouncementBar = ({ onOpenAdmin }) => {
           </span>
         </div>
 
-        {/* Right: Guarantee badges & Admin */}
+        {/* Right: Guarantee badges */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} className="d-none d-lg-flex">
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.76rem', color: '#CBD5E1' }}>
             <Truck size={13} color="var(--gold-accent)" />
@@ -59,27 +60,6 @@ export const AnnouncementBar = ({ onOpenAdmin }) => {
             <ShieldCheck size={13} color="var(--gold-accent)" />
             1-Year Warranty
           </span>
-          {onOpenAdmin && (
-            <>
-              <span style={{ opacity: 0.3, color: '#94A3B8' }}>|</span>
-              <button
-                onClick={onOpenAdmin}
-                style={{
-                  background: 'rgba(212, 175, 55, 0.18)',
-                  border: '1px solid rgba(212, 175, 55, 0.5)',
-                  color: '#FDE68A',
-                  borderRadius: '12px',
-                  padding: '2px 8px',
-                  fontSize: '0.72rem',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-                title="Khodal Fashion Store Manager"
-              >
-                ⚙ Admin Panel
-              </button>
-            </>
-          )}
         </div>
       </div>
     </div>

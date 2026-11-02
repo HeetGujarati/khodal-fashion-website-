@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, Trash2, Plus, Minus, MessageCircle, ShoppingBag, Truck } from 'lucide-react';
+import { X, Trash2, Plus, Minus, ShoppingBag, Truck } from 'lucide-react';
+import { WhatsAppIcon as MessageCircle } from '../common/BrandIcons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '../../context/StoreContext';
 

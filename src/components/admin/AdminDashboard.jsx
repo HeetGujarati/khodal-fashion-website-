@@ -210,7 +210,7 @@ export const AdminDashboard = ({ isOpen, onClose }) => {
                     value={configForm.whatsappNumber}
                     onChange={(e) => setConfigForm({ ...configForm, whatsappNumber: e.target.value })}
                     className="form-input"
-                    placeholder="e.g. 7383556275"
+                    placeholder="e.g. 7575023434"
                     style={{ flex: 1, fontSize: '1rem', fontWeight: 700 }}
                   />
                 </div>
