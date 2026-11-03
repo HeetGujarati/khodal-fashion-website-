@@ -70,7 +70,7 @@ export const HeroBanner = ({ onExploreClick }) => {
             </h1>
 
             <p style={{ fontSize: '1.02rem', color: 'var(--text-secondary)', lineHeight: 1.75, marginBottom: '2.4rem', maxWidth: '530px' }}>
-              Handpicked automatic calibres, executive chronographs, and iconic solid-steel timepieces by Khodal Fashion. Direct importer pricing with personal WhatsApp concierge, certified authenticity, and express insured delivery across India.
+              Handpicked automatic calibres, executive chronographs, and iconic solid-steel timepieces by Khodal Fashion. Direct importer pricing with personal WhatsApp concierge, certified authenticity, and live video previews.
             </p>
 
             {/* CTAs */}
@@ -112,8 +112,8 @@ export const HeroBanner = ({ onExploreClick }) => {
               <div className="kf-hero-trust-item">
                 <ParcelIcon size={28} color="var(--gold-primary)" />
                 <div>
-                  <strong>Free delivery</strong>
-                  <small>Insured, all over India</small>
+                  <strong>Hardcase Box</strong>
+                  <small>Original luxury packaging</small>
                 </div>
               </div>
               <div className="kf-hero-trust-item">

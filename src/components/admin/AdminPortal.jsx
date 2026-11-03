@@ -17,7 +17,14 @@ import {
   Zap, 
   RefreshCw,
   Menu,
-  X
+  X,
+  Lock,
+  Eye,
+  EyeOff,
+  LogOut,
+  KeyRound,
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { ImageUploadDropzone } from './ImageUploadDropzone';
@@ -39,10 +46,47 @@ export const AdminPortal = ({ onBackToStore }) => {
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
+  // Admin Security Password Authentication Gate: khodalfashion@22
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    try {
+      return sessionStorage.getItem('khodal_admin_auth') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [passwordInput, setPasswordInput] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState('');
+
+  const handleLogin = (e) => {
+    e?.preventDefault();
+    if (passwordInput.trim() === 'khodalfashion@22') {
+      try {
+        sessionStorage.setItem('khodal_admin_auth', 'true');
+      } catch {}
+      setIsAuthenticated(true);
+      setLoginError('');
+      showToast('Welcome back', 'success');
+    } else {
+      setLoginError('Incorrect password. Please try again.');
+    }
+  };
+
+  const handleLogout = () => {
+    try {
+      sessionStorage.removeItem('khodal_admin_auth');
+    } catch {}
+    setIsAuthenticated(false);
+    setPasswordInput('');
+    setLoginError('');
+    showToast('Logged out of Admin Portal.', 'info');
+    if (onBackToStore) onBackToStore();
+  };
+
   // Store Settings Form
   const [configForm, setConfigForm] = useState({ ...storeConfig });
 
-  // Add Product Form State
+  // Add Product Form State (Supports Up to 3 Photo Slots & Up to 3 Product Editions / Dial Variants)
   const [newWatch, setNewWatch] = useState({
     title: '',
     brand: 'Khodal Fashion',
@@ -50,13 +94,18 @@ export const AdminPortal = ({ onBackToStore }) => {
     price: '',
     originalPrice: '',
     stock: 5,
-    images: ['https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900'],
+    images: ['', '', ''], // 3 Photo Slots (Slot 1: Main Dial, Slot 2: Wrist Shot, Slot 3: Caseback)
     description: 'Master craftsmanship luxury timepiece engineered with high-precision movement and solid 316L stainless steel bracelet.',
     movement: 'High-Precision Calibre',
     caseDiameter: '42mm',
     glass: 'Sapphire Crystal Anti-Reflective',
     waterResistance: '5 ATM / 50m',
-    strap: 'Solid 316L Stainless Steel'
+    strap: 'Solid 316L Stainless Steel',
+    variants: [
+      { name: 'Standard Edition', colorCode: '#1e293b', inStock: true, enabled: true },
+      { name: 'Tiffany Blue Dial', colorCode: '#38bdf8', inStock: true, enabled: true },
+      { name: 'Obsidian Black Dial', colorCode: '#0f172a', inStock: true, enabled: true }
+    ]
   });
 
   // Orders from Live State (Supabase DB + Local Storage)
@@ -88,7 +137,7 @@ export const AdminPortal = ({ onBackToStore }) => {
     showToast('Store & WhatsApp configurations saved to database!', 'success');
   };
 
-  // Handler: Add Watch to Catalog
+  // Handler: Add Watch to Catalog (Processes all 3 images and up to 3 product editions)
   const handleAddWatch = async (e) => {
     e.preventDefault();
     if (!newWatch.title || !newWatch.price) {
@@ -98,6 +147,25 @@ export const AdminPortal = ({ onBackToStore }) => {
 
     const priceNum = parseInt(newWatch.price, 10);
     const origNum = parseInt(newWatch.originalPrice || (priceNum * 4), 10);
+
+    // Collect non-empty images (up to 3)
+    const validImages = newWatch.images.filter(img => typeof img === 'string' && img.trim().length > 0);
+    const finalImages = validImages.length > 0 
+      ? validImages 
+      : ['https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900'];
+
+    // Collect enabled product editions / dial variants (up to 3)
+    const validVariants = newWatch.variants
+      .filter(v => v.enabled && v.name && v.name.trim().length > 0)
+      .map(v => ({
+        name: v.name.trim(),
+        colorCode: v.colorCode || '#1e293b',
+        inStock: v.inStock !== false
+      }));
+
+    const finalVariants = validVariants.length > 0 
+      ? validVariants 
+      : [{ name: 'Standard Edition', colorCode: '#1e293b', inStock: true }];
 
     const productToAdd = {
       id: `watch-${Date.now()}`,
@@ -111,9 +179,9 @@ export const AdminPortal = ({ onBackToStore }) => {
       stock: parseInt(newWatch.stock, 10) || 5,
       rating: 5.0,
       reviewsCount: 14,
-      images: [newWatch.images[0] || 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900'],
+      images: finalImages,
+      variants: finalVariants,
       description: newWatch.description,
-      variants: [{ name: 'Standard Edition', inStock: true }],
       specs: {
         movement: newWatch.movement,
         caseDiameter: newWatch.caseDiameter,
@@ -124,7 +192,7 @@ export const AdminPortal = ({ onBackToStore }) => {
     };
 
     await addProduct(productToAdd);
-    showToast(`Watch "${productToAdd.title}" added to store catalog & database!`, 'success');
+    showToast(`Timepiece "${productToAdd.title}" published with ${finalImages.length} photo(s) & ${finalVariants.length} edition(s)!`, 'success');
     
     // Reset form
     setNewWatch({
@@ -134,13 +202,18 @@ export const AdminPortal = ({ onBackToStore }) => {
       price: '',
       originalPrice: '',
       stock: 5,
-      images: ['https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=900'],
+      images: ['', '', ''],
       description: 'Master craftsmanship luxury timepiece engineered with high-precision movement and solid 316L stainless steel bracelet.',
       movement: 'High-Precision Calibre',
       caseDiameter: '42mm',
       glass: 'Sapphire Crystal Anti-Reflective',
       waterResistance: '5 ATM / 50m',
-      strap: 'Solid 316L Stainless Steel'
+      strap: 'Solid 316L Stainless Steel',
+      variants: [
+        { name: 'Standard Edition', colorCode: '#1e293b', inStock: true, enabled: true },
+        { name: 'Tiffany Blue Dial', colorCode: '#38bdf8', inStock: true, enabled: true },
+        { name: 'Obsidian Black Dial', colorCode: '#0f172a', inStock: true, enabled: true }
+      ]
     });
 
     setActiveTab('products');
@@ -153,6 +226,184 @@ export const AdminPortal = ({ onBackToStore }) => {
     }
   };
 
+  // Bespoke Minimalist Luxury Lock Screen
+  if (!isAuthenticated) {
+    return (
+      <div 
+        style={{ 
+          minHeight: '100vh', 
+          background: '#080B11',
+          backgroundImage: 'radial-gradient(circle at 50% 35%, rgba(212, 175, 55, 0.08) 0%, transparent 65%)',
+          display: 'flex', 
+          flexDirection: 'column',
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          padding: '1.5rem',
+          fontFamily: 'var(--font-body, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)'
+        }}
+      >
+        <div 
+          style={{ 
+            maxWidth: '380px', 
+            width: '100%', 
+            background: '#0F1420', 
+            border: '1px solid rgba(255, 255, 255, 0.08)', 
+            borderRadius: '16px', 
+            padding: '2.5rem 2rem 2rem 2rem', 
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6)',
+            textAlign: 'center'
+          }}
+        >
+          {/* Brand Logo & Name */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2rem' }}>
+            <div style={{ marginBottom: '1rem' }}>
+              <KhodalLogo size={52} rounded="12px" />
+            </div>
+            <h2 
+              style={{ 
+                fontFamily: 'var(--font-heading, serif)', 
+                fontSize: '1.25rem', 
+                fontWeight: 600, 
+                letterSpacing: '0.12em', 
+                color: '#FFFFFF', 
+                margin: '0 0 0.3rem 0',
+                textTransform: 'uppercase'
+              }}
+            >
+              Khodal Fashion
+            </h2>
+            <span style={{ fontSize: '0.74rem', color: '#64748B', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 500 }}>
+              Store Management
+            </span>
+          </div>
+
+          {/* Login Form */}
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', textAlign: 'left' }}>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
+                <label style={{ fontSize: '0.78rem', fontWeight: 500, color: '#94A3B8' }}>
+                  Password
+                </label>
+              </div>
+
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter password"
+                  value={passwordInput}
+                  onChange={(e) => {
+                    setPasswordInput(e.target.value);
+                    if (loginError) setLoginError('');
+                  }}
+                  autoFocus
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 2.5rem 0.75rem 0.9rem',
+                    borderRadius: '8px',
+                    background: '#080C14',
+                    border: loginError ? '1px solid #EF4444' : '1px solid #1E293B',
+                    color: '#FFFFFF',
+                    fontSize: '0.9rem',
+                    outline: 'none',
+                    letterSpacing: showPassword ? 'normal' : '0.15em',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.15s ease'
+                  }}
+                  onFocus={(e) => {
+                    if (!loginError) e.target.style.borderColor = '#D4AF37';
+                  }}
+                  onBlur={(e) => {
+                    if (!loginError) e.target.style.borderColor = '#1E293B';
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(p => !p)}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: '#64748B',
+                    cursor: 'pointer',
+                    padding: '4px',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                  title={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+
+              {loginError && (
+                <span style={{ display: 'block', color: '#F87171', fontSize: '0.75rem', marginTop: '0.4rem', fontWeight: 500 }}>
+                  {loginError}
+                </span>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                borderRadius: '8px',
+                background: '#D4AF37',
+                color: '#0A0D14',
+                border: 'none',
+                fontWeight: 600,
+                fontSize: '0.88rem',
+                letterSpacing: '0.02em',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                transition: 'opacity 0.15s ease',
+                marginTop: '0.25rem'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.92'}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+            >
+              <span>Sign In</span>
+            </button>
+          </form>
+
+          {/* Back to store */}
+          <div style={{ marginTop: '2rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
+            <button
+              type="button"
+              onClick={onBackToStore}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#64748B',
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                transition: 'color 0.15s ease'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#CBD5E1'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#64748B'}
+            >
+              <ArrowLeft size={13} />
+              <span>Back to Store</span>
+            </button>
+          </div>
+        </div>
+
+        <span style={{ marginTop: '1.5rem', fontSize: '0.72rem', color: '#475569', letterSpacing: '0.04em' }}>
+          Khodal Fashion • Surat, Gujarat
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-portal">
@@ -308,8 +559,8 @@ export const AdminPortal = ({ onBackToStore }) => {
           </button>
         </nav>
 
-        {/* Bottom Sidebar: Return to Storefront */}
-        <div style={{ padding: '1.25rem', borderTop: '1px solid #1E293B', background: '#090D16' }}>
+        {/* Bottom Sidebar: Return to Storefront & Logout */}
+        <div style={{ padding: '1.25rem', borderTop: '1px solid #1E293B', background: '#090D16', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
           <button
             onClick={onBackToStore}
             style={{
@@ -332,6 +583,30 @@ export const AdminPortal = ({ onBackToStore }) => {
           >
             <ArrowLeft size={16} />
             <span>View Live Storefront</span>
+          </button>
+
+          <button
+            onClick={handleLogout}
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              padding: '0.65rem',
+              borderRadius: '8px',
+              background: 'rgba(239, 68, 68, 0.12)',
+              color: '#F87171',
+              border: '1px solid rgba(239, 68, 68, 0.25)',
+              fontWeight: 600,
+              fontSize: '0.82rem',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+            title="Lock Admin and end authenticated session"
+          >
+            <LogOut size={15} />
+            <span>Lock & Logout Admin</span>
           </button>
         </div>
       </aside>
@@ -386,6 +661,27 @@ export const AdminPortal = ({ onBackToStore }) => {
             >
               <Plus size={15} />
               <span>Add Watch</span>
+            </button>
+
+            <button
+              onClick={handleLogout}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                padding: '0.45rem 0.75rem',
+                borderRadius: '8px',
+                background: '#FEF2F2',
+                color: '#DC2626',
+                border: '1px solid #FECACA',
+                fontWeight: 600,
+                fontSize: '0.8rem',
+                cursor: 'pointer'
+              }}
+              title="Lock Admin Portal"
+            >
+              <LogOut size={14} />
+              <span className="d-none d-sm-inline">Logout</span>
             </button>
           </div>
         </header>
@@ -479,37 +775,48 @@ export const AdminPortal = ({ onBackToStore }) => {
                   </div>
                 </div>
 
-                {/* Storage & Compression Status Box */}
+                {/* Boutique Summary & Quick Status */}
                 <div style={{ background: '#FFFFFF', borderRadius: '14px', border: '1px solid #E2E8F0', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0 }}>Bandwidth & Storage Setup</h3>
+                  <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0, color: '#0F172A' }}>Boutique & WhatsApp Setup</h3>
                   
                   <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-                      <Zap size={16} color="#16A34A" />
-                      <strong style={{ fontSize: '0.86rem' }}>Smart WebP Compression</strong>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                      <CheckCircle2 size={16} color="#16A34A" />
+                      <strong style={{ fontSize: '0.86rem', color: '#0F172A' }}>Instant WhatsApp Sync</strong>
                     </div>
                     <p style={{ fontSize: '0.78rem', color: '#64748B', margin: 0, lineHeight: 1.5 }}>
-                      Active for all uploads. Reduces 5MB+ photos to ~200KB while preserving razor-sharp 4K watch dial details.
+                      Orders and product inquiries are received directly on your registered WhatsApp concierge number.
                     </p>
                   </div>
 
                   <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '10px', padding: '1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-                      <CheckCircle2 size={16} color="#16A34A" />
-                      <strong style={{ fontSize: '0.86rem', color: '#166534' }}>
-                        High-Resolution Media Engine
-                      </strong>
-                    </div>
-                    <p style={{ fontSize: '0.78rem', color: '#166534', margin: 0, lineHeight: 1.5 }}>
-                      Direct high-speed watch photography processing with instant client-side rendering and zero cloud setup required.
-                    </p>
+                    <span style={{ fontSize: '0.74rem', color: '#15803D', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>
+                      Active WhatsApp Receiver:
+                    </span>
+                    <strong style={{ fontSize: '1.05rem', color: '#166534' }}>+91 {storeConfig.whatsappNumber}</strong>
                   </div>
 
-                  <div style={{ marginTop: 'auto', background: '#F1F5F9', padding: '0.85rem', borderRadius: '8px' }}>
-                    <span style={{ fontSize: '0.74rem', color: '#475569', display: 'block', marginBottom: '0.35rem' }}>
-                      <strong>WhatsApp Order Receiver:</strong>
-                    </span>
-                    <strong style={{ fontSize: '0.92rem', color: '#0F172A' }}>+91 {storeConfig.whatsappNumber}</strong>
+                  <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <button
+                      onClick={() => setActiveTab('add-product')}
+                      style={{
+                        padding: '0.65rem 1rem',
+                        borderRadius: '8px',
+                        background: 'linear-gradient(135deg, #D4AF37 0%, #AA820A 100%)',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        fontWeight: 700,
+                        fontSize: '0.84rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.4rem'
+                      }}
+                    >
+                      <Plus size={15} />
+                      <span>Add New Watch to Catalog</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -645,23 +952,79 @@ export const AdminPortal = ({ onBackToStore }) => {
                 <div style={{ borderBottom: '1px solid #E2E8F0', paddingBottom: '1.25rem', marginBottom: '1.5rem' }}>
                   <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#0F172A' }}>Publish New Timepiece</h2>
                   <p style={{ fontSize: '0.82rem', color: '#64748B', margin: '4px 0 0 0' }}>
-                    Upload compressed watch photo & enter specs for the Khodal Fashion luxury catalog.
+                    Add photos, specifications, and editions for the Khodal Fashion luxury catalog.
                   </p>
                 </div>
 
                 <form onSubmit={handleAddWatch} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  {/* Photo Upload Area with Smart Image Compressor */}
+                  {/* Photo Upload Area with 3 Photo Slots */}
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.5rem' }}>
-                      Watch High-Resolution Image (Auto-Compressed with zero quality loss) *
-                    </label>
-                    <ImageUploadDropzone
-                      currentImage={newWatch.images[0]}
-                      productName={newWatch.title || 'watch'}
-                      onImageReady={(url, stats) => {
-                        setNewWatch({ ...newWatch, images: [url] });
-                      }}
-                    />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.86rem', fontWeight: 700, color: '#0F172A', margin: 0 }}>
+                          Watch Photos (Up to 3 Photo Angles)
+                        </label>
+                        <span style={{ fontSize: '0.78rem', color: '#64748B' }}>
+                          Slot 1 is the primary storefront photo. Add wrist and caseback photos in slots 2 & 3.
+                        </span>
+                      </div>
+                      <span style={{ fontSize: '0.74rem', background: '#F1F5F9', color: '#334155', padding: '3px 8px', borderRadius: '6px', fontWeight: 700 }}>
+                        {newWatch.images.filter(img => typeof img === 'string' && img.trim().length > 0).length} / 3 Photos Added
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+                      {/* Slot 1: Primary Dial */}
+                      <div style={{ border: '1px solid #CBD5E1', borderRadius: '12px', padding: '1rem', background: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                          <strong style={{ fontSize: '0.82rem', color: '#0F172A' }}>Slot 1: Main Dial *</strong>
+                          <span style={{ fontSize: '0.7rem', color: '#16A34A', background: '#DCFCE7', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Primary</span>
+                        </div>
+                        <ImageUploadDropzone
+                          currentImage={newWatch.images[0]}
+                          productName={`${newWatch.title || 'watch'}-main`}
+                          onImageReady={(url) => {
+                            const updated = [...newWatch.images];
+                            updated[0] = url;
+                            setNewWatch({ ...newWatch, images: updated });
+                          }}
+                        />
+                      </div>
+
+                      {/* Slot 2: Wrist Shot / Profile */}
+                      <div style={{ border: '1px solid #E2E8F0', borderRadius: '12px', padding: '1rem', background: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                          <strong style={{ fontSize: '0.82rem', color: '#0F172A' }}>Slot 2: Wrist Shot / Side</strong>
+                          <span style={{ fontSize: '0.7rem', color: '#64748B', background: '#F1F5F9', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Optional</span>
+                        </div>
+                        <ImageUploadDropzone
+                          currentImage={newWatch.images[1]}
+                          productName={`${newWatch.title || 'watch'}-wrist`}
+                          onImageReady={(url) => {
+                            const updated = [...newWatch.images];
+                            updated[1] = url;
+                            setNewWatch({ ...newWatch, images: updated });
+                          }}
+                        />
+                      </div>
+
+                      {/* Slot 3: Caseback / Box Packaging */}
+                      <div style={{ border: '1px solid #E2E8F0', borderRadius: '12px', padding: '1rem', background: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                          <strong style={{ fontSize: '0.82rem', color: '#0F172A' }}>Slot 3: Caseback / Box</strong>
+                          <span style={{ fontSize: '0.7rem', color: '#64748B', background: '#F1F5F9', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Optional</span>
+                        </div>
+                        <ImageUploadDropzone
+                          currentImage={newWatch.images[2]}
+                          productName={`${newWatch.title || 'watch'}-caseback`}
+                          onImageReady={(url) => {
+                            const updated = [...newWatch.images];
+                            updated[2] = url;
+                            setNewWatch({ ...newWatch, images: updated });
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   {/* Basic Details */}
@@ -797,6 +1160,133 @@ export const AdminPortal = ({ onBackToStore }) => {
                       onChange={(e) => setNewWatch({ ...newWatch, description: e.target.value })}
                       style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '0.88rem', fontFamily: 'inherit' }}
                     />
+                  </div>
+
+                  {/* 3 Watch Product Editions / Dial Variants */}
+                  <div style={{ background: '#FFFFFF', border: '1px solid #CBD5E1', borderRadius: '12px', padding: '1.25rem', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <Layers size={17} color="#D4AF37" />
+                          <h4 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>
+                            Watch Product Editions (Add up to 3 Product Variants per Watch)
+                          </h4>
+                        </div>
+                        <p style={{ fontSize: '0.78rem', color: '#64748B', margin: '3px 0 0 0' }}>
+                          Enable and customize up to 3 editions/dials. Customers can choose their edition during WhatsApp order.
+                        </p>
+                      </div>
+                      <span style={{ fontSize: '0.74rem', background: '#FEF3C7', color: '#B45309', padding: '3px 9px', borderRadius: '6px', fontWeight: 700 }}>
+                        {newWatch.variants.filter(v => v.enabled).length} of 3 Editions Active
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                      {newWatch.variants.map((variant, idx) => (
+                        <div 
+                          key={idx}
+                          style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'minmax(110px, auto) 1fr minmax(130px, auto) minmax(95px, auto)',
+                            gap: '0.75rem',
+                            alignItems: 'center',
+                            background: variant.enabled ? '#F8FAFC' : '#F1F5F9',
+                            border: variant.enabled ? '1px solid #CBD5E1' : '1px dashed #CBD5E1',
+                            borderRadius: '10px',
+                            padding: '0.75rem 1rem',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          {/* Enable Toggle */}
+                          <label style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 700, color: variant.enabled ? '#0F172A' : '#94A3B8' }}>
+                            <input
+                              type="checkbox"
+                              checked={variant.enabled}
+                              onChange={(e) => {
+                                const updated = [...newWatch.variants];
+                                updated[idx].enabled = e.target.checked;
+                                setNewWatch({ ...newWatch, variants: updated });
+                              }}
+                              style={{ cursor: 'pointer', accentColor: '#D4AF37', width: '16px', height: '16px' }}
+                            />
+                            <span>Edition #{idx + 1}</span>
+                          </label>
+
+                          {/* Edition / Dial Name */}
+                          <input
+                            type="text"
+                            disabled={!variant.enabled}
+                            placeholder={idx === 0 ? 'e.g. Standard / Tiffany Blue Dial' : idx === 1 ? 'e.g. Obsidian Black Dial' : 'e.g. Emerald Green Dial'}
+                            value={variant.name}
+                            onChange={(e) => {
+                              const updated = [...newWatch.variants];
+                              updated[idx].name = e.target.value;
+                              setNewWatch({ ...newWatch, variants: updated });
+                            }}
+                            style={{ 
+                              padding: '0.55rem 0.75rem', 
+                              borderRadius: '6px', 
+                              border: '1px solid #CBD5E1', 
+                              fontSize: '0.85rem', 
+                              background: variant.enabled ? '#FFFFFF' : '#E2E8F0',
+                              color: variant.enabled ? '#0F172A' : '#94A3B8'
+                            }}
+                          />
+
+                          {/* Color Swatch Picker */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                            <input
+                              type="color"
+                              disabled={!variant.enabled}
+                              value={variant.colorCode || '#1e293b'}
+                              onChange={(e) => {
+                                const updated = [...newWatch.variants];
+                                updated[idx].colorCode = e.target.value;
+                                setNewWatch({ ...newWatch, variants: updated });
+                              }}
+                              style={{ width: '32px', height: '32px', border: 'none', borderRadius: '6px', cursor: 'pointer', padding: 0, background: 'transparent' }}
+                              title="Pick Swatch Color"
+                            />
+                            <input
+                              type="text"
+                              disabled={!variant.enabled}
+                              value={variant.colorCode || '#1e293b'}
+                              onChange={(e) => {
+                                const updated = [...newWatch.variants];
+                                updated[idx].colorCode = e.target.value;
+                                setNewWatch({ ...newWatch, variants: updated });
+                              }}
+                              placeholder="#1e293b"
+                              style={{ 
+                                width: '75px', 
+                                padding: '0.45rem 0.55rem', 
+                                borderRadius: '6px', 
+                                border: '1px solid #CBD5E1', 
+                                fontSize: '0.78rem', 
+                                background: variant.enabled ? '#FFFFFF' : '#E2E8F0',
+                                fontFamily: 'monospace'
+                              }}
+                            />
+                          </div>
+
+                          {/* In-Stock status */}
+                          <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer', fontSize: '0.78rem', color: variant.inStock ? '#166534' : '#991B1B', fontWeight: 600 }}>
+                            <input
+                              type="checkbox"
+                              disabled={!variant.enabled}
+                              checked={variant.inStock}
+                              onChange={(e) => {
+                                const updated = [...newWatch.variants];
+                                updated[idx].inStock = e.target.checked;
+                                setNewWatch({ ...newWatch, variants: updated });
+                              }}
+                              style={{ cursor: 'pointer', accentColor: '#16A34A' }}
+                            />
+                            <span>{variant.inStock ? 'In Stock' : 'Sold Out'}</span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   <button

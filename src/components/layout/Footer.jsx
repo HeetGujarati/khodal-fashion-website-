@@ -21,8 +21,8 @@ const TRUST_POINTS = [
   {
     num: 'II',
     Icon: ParcelIcon,
-    title: 'Free insured delivery',
-    text: 'Shipped across India in 2–5 days with live tracking.'
+    title: 'Luxury Box Packaging',
+    text: 'Every watch arrives in a solid presentation box with cushion.'
   },
   {
     num: 'III',

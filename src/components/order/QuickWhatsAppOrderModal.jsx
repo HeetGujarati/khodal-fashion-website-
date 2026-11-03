@@ -135,7 +135,6 @@ export const QuickWhatsAppOrderModal = () => {
                   {product.originalPrice && (
                     <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textDecoration: 'line-through' }}>₹{product.originalPrice.toLocaleString('en-IN')}</span>
                   )}
-                  <span className="badge-discount" style={{ fontSize: '0.68rem', padding: '0.15rem 0.4rem' }}>FREE SHIPPING</span>
                 </div>
               </div>
             </div>

@@ -26,9 +26,6 @@ export const CartDrawer = () => {
     pincode: ''
   });
 
-  const freeShippingGoal = storeConfig.freeShippingThreshold || 1500;
-  const progressPercent = Math.min(100, Math.round((cartSubtotal / freeShippingGoal) * 100));
-
   const handleWhatsAppCheckout = () => {
     sendCartWhatsAppOrder(showAddressForm ? customerDetails : null);
     setIsCartOpen(false);
@@ -63,31 +60,6 @@ export const CartDrawer = () => {
               <button className="btn-icon" onClick={() => setIsCartOpen(false)}>
                 <X size={18} />
               </button>
-            </div>
-
-            {/* Free Shipping Progress Meter */}
-            <div style={{ padding: '0.85rem 1.5rem', background: 'var(--gold-light)', borderBottom: '1px solid var(--gold-border)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-primary)', marginBottom: '0.4rem' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <Truck size={14} color="var(--gold-primary)" />
-                  {cartSubtotal >= freeShippingGoal ? (
-                    <strong style={{ color: 'var(--wa-green)' }}>🎉 You have unlocked FREE Express Delivery!</strong>
-                  ) : (
-                    <span>Add ₹{(freeShippingGoal - cartSubtotal).toLocaleString('en-IN')} more for Free Delivery</span>
-                  )}
-                </span>
-                <span style={{ fontWeight: 700, color: 'var(--gold-primary)' }}>{progressPercent}%</span>
-              </div>
-              <div style={{ width: '100%', height: '5px', background: 'rgba(0, 0, 0, 0.08)', borderRadius: '3px', overflow: 'hidden' }}>
-                <div 
-                  style={{ 
-                    width: `${progressPercent}%`, 
-                    height: '100%', 
-                    background: cartSubtotal >= freeShippingGoal ? 'var(--wa-green)' : 'var(--gold-gradient)',
-                    transition: 'width 0.3s ease'
-                  }} 
-                />
-              </div>
             </div>
 
             {/* Cart Items List */}
@@ -221,11 +193,8 @@ export const CartDrawer = () => {
                 </div>
 
                 {/* Total Summary */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' }}>
-                  <div>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Total Amount:</span>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--wa-green)', fontWeight: 600 }}>Free Express Delivery Included</div>
-                  </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1.25rem' }}>
+                  <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Total Order Value:</span>
                   <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                     ₹{cartSubtotal.toLocaleString('en-IN')}
                   </span>

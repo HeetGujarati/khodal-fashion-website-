@@ -45,15 +45,15 @@ export const AnnouncementBar = () => {
         <div className="announcement-ticker" style={{ margin: '0 auto', textAlign: 'center' }}>
           <Sparkles size={13} color="var(--gold-accent)" />
           <span style={{ letterSpacing: '0.03em', fontSize: '0.8rem' }}>
-            {storeConfig.announcements[currentIdx] || '100% Original Certified Luxury Watches | Express Pan-India Delivery'}
+            {storeConfig.announcements[currentIdx] || '100% Original Certified Luxury Watches | Direct WhatsApp Concierge'}
           </span>
         </div>
 
         {/* Right: Guarantee badges */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} className="d-none d-lg-flex">
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.76rem', color: '#CBD5E1' }}>
-            <Truck size={13} color="var(--gold-accent)" />
-            Pan-India Delivery
+            <Sparkles size={13} color="var(--gold-accent)" />
+            Live 4K Preview
           </span>
           <span style={{ opacity: 0.3, color: '#94A3B8' }}>|</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.76rem', color: '#CBD5E1' }}>

@@ -36,7 +36,7 @@ export const StoreProvider = ({ children }) => {
       supportEmail: 'khodalfashion@gmail.com',
       storeAddress: 'Office No-111, Green Plaza, Near DMart Mall, Mota Varacha, Surat, Gujarat',
       announcements: [
-        '✨ KHODAL FASHION: Free Insured Delivery Across India | 100% Genuine Watches',
+        '✨ KHODAL FASHION: 100% Genuine Luxury Watches | Certified Quality',
         '💬 Order Directly on WhatsApp for Instant Confirmation & Dispatch',
         '🛡️ 1-Year Movement Warranty & 7-Day Hassle-Free Replacement Included'
       ],
@@ -279,8 +279,7 @@ export const StoreProvider = ({ children }) => {
       `⌚ *Watch:* ${product.title}\n` +
       `🏷️ *SKU:* ${product.sku}\n` +
       `🎨 *Dial/Variant:* ${variantName || 'Standard'}\n` +
-      `💰 *Price:* ₹${product.price.toLocaleString('en-IN')}\n` +
-      `🚚 *Shipping:* FREE Express Pan-India Delivery\n\n` +
+      `💰 *Price:* ₹${product.price.toLocaleString('en-IN')}\n\n` +
       `👤 *CUSTOMER DETAILS:*\n` +
       `• *Name:* ${customerDetails.name}\n` +
       `• *Phone:* ${customerDetails.phone}\n` +
@@ -332,7 +331,6 @@ export const StoreProvider = ({ children }) => {
       `${itemsList}` +
       `━━━━━━━━━━━━━━━━━━━━\n` +
       `💵 *TOTAL ORDER VALUE:* ₹${cartSubtotal.toLocaleString('en-IN')}\n` +
-      `🚚 *SHIPPING:* FREE Express Delivery\n` +
       `━━━━━━━━━━━━━━━━━━━━\n\n`;
 
     if (customerDetails && customerDetails.name) {
